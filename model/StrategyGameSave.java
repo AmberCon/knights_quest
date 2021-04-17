@@ -21,6 +21,7 @@ public class StrategyGameState implements Serializable{
 	protected Scenario scenario;
 	protected Tile[][] board;
 	
+	//TODO
 	public StrategyGameState(Scenario scenario) {
 		
 	}
