@@ -58,5 +58,21 @@ public class StrategyGameModel{
 		}
 	}
 	
+	public int getBoardWidth() {
+		//TODO
+	}
+	
+	public int getBoardHeight() {
+		//TODO
+	}
+	
+	/**
+	 * Returns the filename for the background image of the current map
+	 * @return the filename for the background image of the current map, as a String
+	 */
+	public String getBackgroundImageFileName() {
+		return backgroundImageFileName;
+	}
+	
 	//TODO setPiece() if not moved to Tile
 }
