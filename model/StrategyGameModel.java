@@ -24,11 +24,24 @@ package model;
  */
 public class StrategyGameModel{
 	
-	private Tile[][] board;
-	private Team currentTurn;
-	private String backgroundImageFileName;
+	private StrategyGameState state;
 	
-	//TODO Constructor
+	/**
+	 * Constructor for the model
+	 * Creates a new model from a StrategyGameState
+	 * 
+	 * Throws an exception if a null StrategyGameState is passed, or it's board has a 
+	 * 0 width/height
+	 * @param state the StrategyGameState to load the model from
+	 *
+	 */
+	public StrategyGameModel(StrategyGameState state) {
+		this.state = state;
+		if(this.state == null || this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
+			throw new IllegalArgumentException();
+		}
+	}
+	
 	
 	/**
 	 * Returns the tile at the given row and column
@@ -37,7 +50,7 @@ public class StrategyGameModel{
 	 * @return the Tile at the given row and column
 	 */
 	Tile getTile(int row, int col){
-		return board[row][col];
+		return state.board[row][col];
 	}
 	
 	/**
@@ -45,7 +58,7 @@ public class StrategyGameModel{
 	 * @return the team whoose turn it currently is, as a Team
 	 */
 	public Team getTurn() {
-		return currentTurn;
+		return state.currentTurn;
 	}
 	
 	/**
@@ -53,19 +66,27 @@ public class StrategyGameModel{
 	 * player.
 	 */
 	public void nextTurn() {
-		if(currentTurn.equals(Team.HUMAN)) {
-			currentTurn = Team.COMPUTER;
+		if(state.currentTurn.equals(Team.HUMAN)) {
+			state.currentTurn = Team.COMPUTER;
 		} else {
-			currentTurn = Team.HUMAN;
+			state.currentTurn = Team.HUMAN;
 		}
 	}
 	
+	/**
+	 * Returns the width (number of columns) of the board
+	 * @return the width of the board as an int
+	 */
 	public int getBoardWidth() {
-		//TODO
+		return state.board[0].length;
 	}
 	
+	/**
+	 * Returns the height (number of rows) of the board
+	 * @return the height of the board as an int
+	 */
 	public int getBoardHeight() {
-		//TODO
+		return state.board.length;
 	}
 	
 	/**
@@ -73,7 +94,15 @@ public class StrategyGameModel{
 	 * @return the filename for the background image of the current map, as a String
 	 */
 	public String getBackgroundImageFileName() {
-		return backgroundImageFileName;
+		return state.backgroundImageFileName;
+	}
+	
+	/**
+	 * Returns the state of the model, for saving purposes
+	 * @return the state of the model as a StrategyGameState
+	 */
+	public StrategyGameState getState() {
+		return state;
 	}
 	
 	//TODO setPiece() if not moved to Tile
