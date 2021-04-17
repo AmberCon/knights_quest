@@ -3,6 +3,8 @@ package model;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Observable;
+import java.util.Observer;
 
 import controller.BadSaveException;
 
@@ -28,7 +30,7 @@ import controller.BadSaveException;
  * @author Ember Chan
  *
  */
-public class StrategyGameModel{
+public class StrategyGameModel extends Observable{
 	
 	private StrategyGameState state;
 	
@@ -49,6 +51,7 @@ public class StrategyGameModel{
 			throw new BadSaveException();
 		} 
 	}
+	
 	
 	
 	/**
