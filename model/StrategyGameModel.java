@@ -42,7 +42,7 @@ public class StrategyGameModel{
 	 * Returns the Team whoose turn it currently is
 	 * @return the team whoose turn it currently is, as a Team
 	 */
-	Team getTurn() {
+	public Team getTurn() {
 		return currentTurn;
 	}
 	
@@ -50,7 +50,7 @@ public class StrategyGameModel{
 	 * Gives control of the current turn over to the next
 	 * player.
 	 */
-	void nextTurn() {
+	public void nextTurn() {
 		if(currentTurn.equals(Team.HUMAN)) {
 			currentTurn = Team.COMPUTER;
 		} else {
