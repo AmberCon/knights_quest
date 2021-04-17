@@ -38,5 +38,25 @@ public class StrategyGameModel{
 		return board[row][col];
 	}
 	
+	/**
+	 * Returns the Team whoose turn it currently is
+	 * @return the team whoose turn it currently is, as a Team
+	 */
+	Team getTurn() {
+		return currentTurn;
+	}
+	
+	/**
+	 * Gives control of the current turn over to the next
+	 * player.
+	 */
+	void nextTurn() {
+		if(currentTurn.equals(Team.HUMAN)) {
+			currentTurn = Team.COMPUTER;
+		} else {
+			currentTurn = Team.HUMAN;
+		}
+	}
+	
 	//TODO setPiece() if not moved to Tile
 }
