@@ -37,4 +37,6 @@ public class StrategyGameModel{
 	Tile getTile(int row, int col){
 		return board[row][col];
 	}
+	
+	//TODO setPiece() if not moved to Tile
 }
