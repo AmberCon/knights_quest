@@ -1,5 +1,11 @@
 package model;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
+import controller.BadSaveException;
+
 /**
  * This class represents the model in the MCV architecture for
  * this strategy game.
@@ -27,19 +33,21 @@ public class StrategyGameModel{
 	private StrategyGameState state;
 	
 	/**
-	 * Constructor for the model
-	 * Creates a new model from a StrategyGameState
+	 * Creates a new StrategyGameModel from a saved StrategyGameState
 	 * 
-	 * Throws an exception if a null StrategyGameState is passed, or it's board has a 
-	 * 0 width/height
-	 * @param state the StrategyGameState to load the model from
-	 *
+	 * @param filename the filename of the saved StrategyGameState
 	 */
-	public StrategyGameModel(StrategyGameState state) {
-		this.state = state;
-		if(this.state == null || this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
-			throw new IllegalArgumentException();
-		}
+	public StrategyGameModel(String filename) {
+		try (ObjectInputStream objIn = 
+				new ObjectInputStream(new FileInputStream("save_game.dat"));){
+			StrategyGameState state = (StrategyGameState) objIn.readObject();
+			this.state = state;
+			if(this.state == null || this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
+				throw new BadSaveException();
+			}
+		} catch (IOException | ClassNotFoundException | ClassCastException e) {
+			throw new BadSaveException();
+		} 
 	}
 	
 	
