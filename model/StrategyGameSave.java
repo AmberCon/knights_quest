@@ -1,28 +1,27 @@
-package saves;
+package model;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import model.StrategyGameModel;
 
 /**
  * A 
  * @author Ember Chan
  *
  */
-public class StrategyGameSave implements Serializable{
+public class StrategyGameState implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private Team currentTurn;
-	private Scenario scenario;
-	private Tile[][] board;
+	protected Team currentTurn;
+	protected Scenario scenario;
+	protected Tile[][] board;
 	
-	public StrategyGameSave(StrategyGameModel model) {
+	public StrategyGameState(Scenario scenario) {
 		
 	}
 	
