@@ -22,29 +22,10 @@ public class StrategyGameSave implements Serializable{
 	private Scenario scenario;
 	private Tile[][] board;
 	
-	/**
-	 * Loads a saved StrategyGameSave
-	 * @param filepath the filepath of the saved game as a String
-	 * @return a StrategyGameSave loaded from the save
-	 * @throws BadSaveException if the save couldn't be loaded
-	 */
-	public static StrategyGameSave load(String filepath) throws BadSaveException{
-		try (ObjectInputStream objIn = 
-				new ObjectInputStream(new FileInputStream(filepath));){
-			StrategyGameSave game = (StrategyGameSave) objIn.readObject();
-			return game;
-		} catch (IOException | ClassNotFoundException | ClassCastException e) {
-			throw new BadSaveException();
-		} 
-	}
-	
 	public StrategyGameSave(StrategyGameModel model) {
 		
 	}
 	
-	public void save(String filepath) {
-		
-	}
 	
 	
 	
