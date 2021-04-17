@@ -28,6 +28,8 @@ public class StrategyGameModel{
 	private Team currentTurn;
 	private String backgroundImageFileName;
 	
+	//TODO Constructor
+	
 	/**
 	 * Returns the tile at the given row and column
 	 * @param row the row of the tile to get, as an int
