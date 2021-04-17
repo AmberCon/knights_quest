@@ -4,9 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Observable;
-import java.util.Observer;
 
-import controller.BadSaveException;
+
 
 /**
  * This class represents the model in the MCV architecture for
