@@ -12,14 +12,6 @@ public class StrategyGameModel extends Observable {
 	String backgroundImageFileName;
 	
 	public StrategyGameModel(String levelFileName) {
-		Tile[][] newBoard = {{new OpenTile(), new OpenTile(new Archer(Team.COMPUTER)), new OpenTile(), new OpenTile(), new OpenTile()},
-				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile()},
-				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile()},
-				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile()},
-				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(new Archer(Team.HUMAN)), new OpenTile()}};
-		board = newBoard;
-		team = Team.HUMAN;
-		backgroundImageFileName = "assets/level_background.jpg";
 	}
 	
 	public Tile getTile(int row, int col) {
@@ -31,19 +23,15 @@ public class StrategyGameModel extends Observable {
 	}
 	
 	public void nextTurn() {
-		if (team == Team.HUMAN) {
-			team = Team.COMPUTER;
-		} else {
-			team = Team.HUMAN;
-		}
+		
 	}
 	
 	public int getBoardWidth() {
-		return board[0].length;
+		return 0;
 	}
 	
 	public int getBoardLength() {
-		return board.length;
+		return 0;
 	}
 	
 	public String getBackgroundImageFileName() {
