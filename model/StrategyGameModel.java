@@ -18,7 +18,7 @@ public class StrategyGameModel extends Observable {
 				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile()},
 				{new OpenTile(), new OpenTile(), new OpenTile(), new OpenTile(new Archer(Team.HUMAN)), new OpenTile()}};
 		board = newBoard;
-		team = Team.HUMAN;
+		team = Team.COMPUTER;
 		backgroundImageFileName = "assets/level_background.jpg";
 	}
 	
