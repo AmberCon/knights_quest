@@ -9,7 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import model.StrategyGameModel;
-
+/**
+ * 
+ * @author Saul Weintraub
+ *
+ */
 public class StrategyGameController{
 	StrategyGameModel model;
 	
