@@ -141,15 +141,43 @@ public class StrategyGameController{
 		
 	}
 	
-	//TODO
+	
 	public List<int[]> getValidAttacks(int row, int col){
 		List<int[]> possible = new ArrayList<int[]>();
+		Piece piece = model.getTile(row, col).getPiece();
+		int range = piece.getAttackDistance();
+		Team team = piece.getTeam();
+		
+		getValidAttacksHelper(row, col, range, team, possible);
 		
 		return possible;
 	}
 	
+	// Currently range attacks dont have to follow a straight line, will change later
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
-		
+		int width = getBoardWidth();
+		int length = getBoardLength();
+		if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
+			if(model.getTile(row, col).hasPlayer()) {
+				if(!model.getTile(row, col).getPiece().getTeam.equals(team)) {
+					int[] coord = {row, col};
+					if(!possible.contains(coord)) {
+						possible.add(coord);
+					}
+				}
+			}
+			if(range > 0) {
+				getValidAttacksHelper(row + 1, col, range - 1, team, possible);
+				getValidAttacksHelper(row + 1, col, range - 1, team, possible);
+				getValidAttacksHelper(row + 1, col - 1, range - 1, team, possible);
+				getValidAttacksHelper(row - 1, col, range - 1, team, possible);
+				getValidAttacksHelper(row - 1, col + 1, range - 1, team, possible);
+				getValidAttacksHelper(row - 1, col - 1, range - 1, team, possible);
+				getValidAttacksHelper(row, col + 1, range - 1, team, possible);
+				getValidAttacksHelper(row, col - 1, range - 1, team, possible);
+			}
+			
+		}
 	}
 	
 	public List<int[]> getValidMoves(int row, int col){
@@ -162,6 +190,7 @@ public class StrategyGameController{
 		return possible;
 	}
 	
+	//TODO simplify this by a lot, make it similar to getValidAttacksHelper
 	private void getValidMovesHelper(int row, int col, int remaining, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
