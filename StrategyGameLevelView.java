@@ -7,12 +7,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,7 +27,6 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -79,7 +75,7 @@ public class StrategyGameLevelView implements Observer {
 		saveUpToDate = true;
 			
 		// Set up model and controller
-		model = new StrategyGameModel(levelFileName);
+		model = new StrategyGameModel(levelFileName); // TODO: ADD ERROR HANDLING
 		model.addObserver(this);
 		controller = new StrategyGameController(model);
 				
@@ -197,7 +193,7 @@ public class StrategyGameLevelView implements Observer {
 				    	} else {
 				    		onClickMenu.show(tile, e.getScreenX(), e.getScreenY());
 				    	}
-			        } 
+			        }
 			    };  
 			    tile.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 				
@@ -279,7 +275,7 @@ public class StrategyGameLevelView implements Observer {
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
 				        public void handle(MouseEvent e) { 
-				        	controller.attack(row, col, againstRow, againstCol);
+				        	controller.attack(row, col, againstRow, againstCol); //  TODO: ADD ERROR HANDLING
 				        } 
 				    };  
 				    
@@ -341,7 +337,7 @@ public class StrategyGameLevelView implements Observer {
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
 				        public void handle(MouseEvent e) { 
-				        	controller.move(row, col, toRow, toCol);
+				        	controller.move(row, col, toRow, toCol); // TODO: ADD ERROR HANDLING
 				        } 
 				    };  
 				    

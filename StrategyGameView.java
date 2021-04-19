@@ -1,7 +1,4 @@
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -9,15 +6,12 @@ import java.util.Observer;
 import java.util.Optional;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -25,22 +19,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.StrategyGameModel.Team;
@@ -166,7 +155,7 @@ public class StrategyGameView extends Application {
 			level.setPrefSize(100, 75);
 			level.setStyle("-fx-font-size:20");
 			level.setOnAction((event) -> {
-				startGame("level_" + Integer.toString(levelNum) + ".dat");
+				startGame("levels/level_" + Integer.toString(levelNum) + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
 			});
 			levels.add(level, i % 4, Math.floorDiv(i, 4));
 			ColumnConstraints levelColumn = new ColumnConstraints();
@@ -239,7 +228,7 @@ public class StrategyGameView extends Application {
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
 			save.setOnAction((event) -> {
-				startGame("saves/" + saveName + ".dat");
+				startGame("saves/" + saveName + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
 			});
 			saves.getChildren().add(save);
 		}
@@ -257,7 +246,7 @@ public class StrategyGameView extends Application {
 			Optional<String> fileName = deleteSaveDialog.showAndWait();
 			
 			fileName.ifPresent(file -> {
-				File saveFile = new File("save_files/" + file + ".dat");
+				File saveFile = new File("saves/" + file + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
 				saveFile.delete();
 			});
 			resumeGame();
@@ -358,7 +347,7 @@ public class StrategyGameView extends Application {
 		
 		Optional<String> fileName = saveGame.showAndWait();
 		
-		fileName.ifPresent(file -> curGame.controller.saveGame("save_files/" + file + ".dat")); // TODO: EDIT WITH AGREED UPON FORMAT
+		fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file + ".dat")); // TODO: EDIT WITH AGREED UPON FORMAT
 		curGame.setSaveUpToDate();
 	}
 	
