@@ -1,4 +1,5 @@
 /StrategyGameModel.class
+<<<<<<< HEAD
 /Tile.class
 /OpenTile.class
 /BlockedTile.class
@@ -7,3 +8,7 @@
 /Knight.class
 /Archer.class
 /Team.class
+=======
+/Team.class
+/BadSaveException.class
+>>>>>>> refs/remotes/origin/07-model
