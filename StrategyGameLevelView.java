@@ -39,30 +39,44 @@ import javafx.scene.text.Text;
 import model.StrategyGameModel;
 import model.StrategyGameModel.Team;
 
+/**
+ * 
+ * @author Amber Converse
+ * 
+ * This class encapsulates a single Strategy Game with its
+ * related scene.
+ */
 @SuppressWarnings("deprecation")
 public class StrategyGameLevelView implements Observer {
 	
 	BorderPane gameWindow;
-	GridPane board;
+	GridPane map;
 	Text message;
 	
-	int boardWidthPixel;
-	int boardHeightPixel;
+	int mapWidthPixel;
+	int mapHeightPixel;
 	
 	StrategyGameModel model;
 	StrategyGameController controller;
 	StrategyGameView mainView;
 	
-	boolean hasRecentSave;
+	boolean saveUpToDate;
 	String levelFileName;
 	
+	/**
+	 * This constructor constructs the Strategy Game gui (not including the top bar).
+	 * 
+	 * @param mainView (StrategyGameView) : should be the main view object.
+	 * @param gameWindow (BorderPane) : an already constructed gameWindow with the top GUI already constructed
+	 * @param levelFileName (String) : a string representing the name of the level/save file to be constructed.
+	 */
 	public StrategyGameLevelView(StrategyGameView mainView, BorderPane gameWindow, String levelFileName) {
 		
 		this.mainView = mainView;
 		this.gameWindow = gameWindow;
 		this.levelFileName = levelFileName;
 		
-		hasRecentSave = true;
+		saveUpToDate = true;
 			
 		// Set up model and controller
 		model = new StrategyGameModel(levelFileName);
@@ -88,22 +102,25 @@ public class StrategyGameLevelView implements Observer {
 		
 		gameWindow.setBottom(bottomGUI);
 				
-		// Set up the board
+		// Set up the map
 		setBoard();
 	}
 	
+	/**
+	 * Sets up the board
+	 */
 	private void setBoard() {
-		Image boardBackground = new Image(controller.getBackgroundImageFileName());
-		boardWidthPixel = (int) boardBackground.getWidth();
-		boardHeightPixel = (int) boardBackground.getHeight();
+		Image mapBackground = new Image(controller.getBackgroundImageFileName());
+		mapWidthPixel = (int) mapBackground.getWidth();
+		mapHeightPixel = (int) mapBackground.getHeight();
 		this.message.setText("");
 		VBox center = new VBox();
-		center.setPrefSize(boardWidthPixel, boardHeightPixel);
+		center.setPrefSize(mapWidthPixel, mapHeightPixel);
 		center.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		board = new GridPane();
-		board.setAlignment(Pos.BASELINE_CENTER);
-		board.setPrefSize(boardWidthPixel, boardHeightPixel);;
-		board.setBackground(new Background(new BackgroundImage(boardBackground,
+		map = new GridPane();
+		map.setAlignment(Pos.BASELINE_CENTER);
+		map.setPrefSize(mapWidthPixel, mapHeightPixel);;
+		map.setBackground(new Background(new BackgroundImage(mapBackground,
 							BackgroundRepeat.NO_REPEAT, 
 							BackgroundRepeat.NO_REPEAT, 
 							BackgroundPosition.CENTER, 
@@ -113,18 +130,27 @@ public class StrategyGameLevelView implements Observer {
 			for (int col = 0; col < controller.getBoardWidth(); col++) {
 				GridPane tile = new GridPane();
 				setTile(tile, row, col, true);
-				board.add(tile, col, row);
+				map.add(tile, col, row);
 			}
 		}
-		center.getChildren().add(board);
+		center.getChildren().add(map);
 		center.setAlignment(Pos.CENTER);;
 		gameWindow.setCenter(center);
 	}
 	
+	/**
+	 * Sets up an individual tile at row, col. Will include on-click actions if withEventFilters
+	 * is true.
+	 * 
+	 * @param tile (GridPane) : already constructed empty GridPane to be populated with GUI elements
+	 * @param row (int) : the row of the tile on the map
+	 * @param col (int) : the column of the tile on the map
+	 * @param withEventFilters (boolean) : if true, on-click menus will be added to pieces
+	 */
 	private void setTile(GridPane tile, int row, int col, boolean withEventFilters) {
 		
-		int tileWidth = Math.floorDiv(boardWidthPixel, controller.getBoardWidth());
-		int tileHeight = Math.floorDiv(boardHeightPixel, controller.getBoardLength());
+		int tileWidth = Math.floorDiv(mapWidthPixel, controller.getBoardWidth());
+		int tileHeight = Math.floorDiv(mapHeightPixel, controller.getBoardLength());
 		
 		tile.setPrefSize(tileWidth, tileHeight);
 		tile.setMaxSize(tileWidth, tileHeight);
@@ -213,6 +239,12 @@ public class StrategyGameLevelView implements Observer {
 		}
 	}
 	
+	/**
+	 * Highlights all valid attacks for the piece at row, col in red.
+	 * 
+	 * @param row (int) : the row of the piece on the map
+	 * @param col (int) : the column of the piece on the map
+	 */
 	private void showAttacks(int row, int col) {
 		
 		List<int[]> validAttacks = controller.getValidAttacks(row, col);
@@ -222,13 +254,13 @@ public class StrategyGameLevelView implements Observer {
 			return;
 		}
 		
-		for (int boardRow = 0; boardRow < controller.getBoardLength(); boardRow++) {
-			for (int boardCol = 0; boardCol < controller.getBoardWidth(); boardCol++) {
+		for (int mapRow = 0; mapRow < controller.getBoardLength(); mapRow++) {
+			for (int mapCol = 0; mapCol < controller.getBoardWidth(); mapCol++) {
 				
 				GridPane tile = new GridPane();
-				setTile(tile, boardRow, boardCol, false);
+				setTile(tile, mapRow, mapCol, false);
 				
-				int[] curCoordinates = {boardRow, boardCol};
+				int[] curCoordinates = {mapRow, mapCol};
 				
 				boolean isAttack = false;
 				for (int[] coord : validAttacks) {
@@ -241,8 +273,8 @@ public class StrategyGameLevelView implements Observer {
 					
 					tile.setBackground(new Background(new BackgroundFill(Color.RED, new CornerRadii(5), Insets.EMPTY)));
 					
-					final int againstRow = boardRow;
-					final int againstCol = boardCol;
+					final int againstRow = mapRow;
+					final int againstCol = mapCol;
 					
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
@@ -264,11 +296,17 @@ public class StrategyGameLevelView implements Observer {
 				    tile.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 				}
 				
-				board.add(tile, boardCol, boardRow);
+				map.add(tile, mapCol, mapRow);
 			}
 		}
 	}
 	
+	/**
+	 * Highlights all valid moves for the piece at row, col in yellow.
+	 * 
+	 * @param row (int) : the row of the piece on the map
+	 * @param col (int) : the column of the piece on the map
+	 */
 	private void showMoves(int row, int col) {
 
 		List<int[]> validMoves = controller.getValidMoves(row, col);
@@ -278,13 +316,13 @@ public class StrategyGameLevelView implements Observer {
 			return;
 		}
 		
-		for (int boardRow = 0; boardRow < controller.getBoardLength(); boardRow++) {
-			for (int boardCol = 0; boardCol < controller.getBoardWidth(); boardCol++) {
+		for (int mapRow = 0; mapRow < controller.getBoardLength(); mapRow++) {
+			for (int mapCol = 0; mapCol < controller.getBoardWidth(); mapCol++) {
 				
 				GridPane tile = new GridPane();
-				setTile(tile, boardRow, boardCol, false);
+				setTile(tile, mapRow, mapCol, false);
 				
-				int[] curCoordinates = {boardRow, boardCol};
+				int[] curCoordinates = {mapRow, mapCol};
 				
 				boolean isMove = false;
 				for (int[] coord : validMoves) {
@@ -297,8 +335,8 @@ public class StrategyGameLevelView implements Observer {
 					
 					tile.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(5), Insets.EMPTY)));
 					
-					final int toRow = boardRow;
-					final int toCol = boardCol;
+					final int toRow = mapRow;
+					final int toCol = mapCol;
 					
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
@@ -320,11 +358,15 @@ public class StrategyGameLevelView implements Observer {
 				    tile.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 				}
 				
-				board.add(tile, boardCol, boardRow);
+				map.add(tile, mapCol, mapRow);
 			}
 		}
 	}
 	
+	/**
+	 * Updates the board, called by the Observable model. Ends the
+	 * game if the last move resulted in a completed game.
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		setBoard();
@@ -338,19 +380,44 @@ public class StrategyGameLevelView implements Observer {
 				mainView.displayRetryMenu(levelFileName);
 			}
 		}
-		hasRecentSave = false;
+		saveUpToDate = false;
 	}
 	
+	/**
+	 * Displays the given message on the bottom GUI. Used for soft
+	 * errors messages.
+	 * 
+	 * @param message (string) : the message to be displayed
+	 */
 	private void displayMessage(String message) {
 		this.message.setText(message);
 	}
 	
-	public void setHasRecentSave() {
-		hasRecentSave = true;
+	/**
+	 * Returns the dimensions of the map in pixels.
+	 * 
+	 * @return int[] : a two-element array containing the width as the first
+	 * element and the height as the second element.
+	 */
+	public int[] getMapDimensions() {
+		int[] dimensions = {mapWidthPixel, mapHeightPixel};
+		return dimensions;
 	}
 	
-	public boolean hasRecentSave() {
-		return hasRecentSave;
+	/**
+	 * Sets saveUpToDate to true to record that a save was just made.
+	 */
+	public void setSaveUpToDate() {
+		saveUpToDate = true;
+	}
+	
+	/**
+	 * Returns whether any moves have been made since the last save.
+	 * 
+	 * @return
+	 */
+	public boolean isSaveUpToDate() {
+		return saveUpToDate;
 	}
 
 }

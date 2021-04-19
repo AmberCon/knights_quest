@@ -45,6 +45,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.StrategyGameModel.Team;
 
+/**
+ * 
+ * @author Amber Converse
+ * 
+ * This class encapsulates the GUI view for the Strategy Game.
+ */
+
 public class StrategyGameView extends Application {
 
 	Stage stage;
@@ -55,6 +62,11 @@ public class StrategyGameView extends Application {
 	
 	static final int numLevels = 5;
 	
+	/**
+	 * This function starts the application, opening to the main menu.
+	 * 
+	 * @param primaryStage (stage): the stage to display the scene on
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
@@ -63,7 +75,7 @@ public class StrategyGameView extends Application {
 		primaryStage.setTitle("Strategy Game");
 		
 		primaryStage.setOnCloseRequest(event -> {
-			if (curGame != null && !curGame.controller.isOver() && !curGame.hasRecentSave()) {
+			if (curGame != null && !curGame.controller.isOver() && !curGame.isSaveUpToDate()) {
 				attemptSave();
 			}
 		});
@@ -120,6 +132,9 @@ public class StrategyGameView extends Application {
 		primaryStage.show();
 	}
 	
+	/**
+	 * Opens a level select screen.
+	 */
 	private void levelSelect() {
 		BorderPane levelWindow = new BorderPane();
 		
@@ -192,6 +207,9 @@ public class StrategyGameView extends Application {
 		stage.show();
 	}
 	
+	/**
+	 * Opens a save select screen.
+	 */
 	private void resumeGame() {
 		BorderPane saveSelectWindow = new BorderPane();
 		
@@ -275,17 +293,23 @@ public class StrategyGameView extends Application {
 		stage.show();
 	}
 	
+	/**
+	 * Starts a game from the given string levelFileName, which it will pass
+	 * into the model to construct the level.
+	 * 
+	 * @param levelFileName (String): should represent the name a of levelFile or
+	 * save file.
+	 */
 	private void startGame(String levelFileName) {
 		
 		BorderPane gameWindow = new BorderPane();
-		Scene game = new Scene(gameWindow, 600, 600);
 		
 		// Top GUI
 		MenuBar topGUI = new MenuBar();
 		Menu fileMenu = new Menu("File");
 		MenuItem restart = new MenuItem("Restart");
 		restart.setOnAction((event) -> {
-			if (!curGame.hasRecentSave()) {
+			if (!curGame.isSaveUpToDate()) {
 				attemptSave();
 			}
 			startGame(levelFileName);
@@ -293,7 +317,7 @@ public class StrategyGameView extends Application {
 		fileMenu.getItems().add(restart);
 		MenuItem backToMenu = new MenuItem("Main Menu");
 		backToMenu.setOnAction((event) -> {
-		if (!curGame.hasRecentSave()) {
+		if (!curGame.isSaveUpToDate()) {
 			attemptSave();
 		}
 			stage.setScene(mainMenu);
@@ -315,10 +339,16 @@ public class StrategyGameView extends Application {
 		gameWindow.setTop(topGUI);
 		
 		curGame = new StrategyGameLevelView(this, gameWindow, levelFileName);
+		int[] dimensions = curGame.getMapDimensions();
 		
+		Scene game = new Scene(gameWindow, dimensions[0]+50, dimensions[1]+50);
 		stage.setScene(game);
 	}
 	
+	/**
+	 * This function opens a pop-up window that allows the user to type a name for a save
+	 * and save their game.
+	 */
 	private void save() {
 		TextInputDialog saveGame = new TextInputDialog();
 		saveGame.setTitle("Saving game...");
@@ -328,10 +358,14 @@ public class StrategyGameView extends Application {
 		
 		Optional<String> fileName = saveGame.showAndWait();
 		
-		fileName.ifPresent(file -> curGame.controller.saveGame("save_files/" + file + ".dat"));
-		curGame.setHasRecentSave();
+		fileName.ifPresent(file -> curGame.controller.saveGame("save_files/" + file + ".dat")); // TODO: EDIT WITH AGREED UPON FORMAT
+		curGame.setSaveUpToDate();
 	}
 	
+	/**
+	 * This function shows a pop-up window warning the user they are about to exit without saving
+	 * and offers them the option to save.
+	 */
 	private void attemptSave() {
 		Dialog<String> saveGameWarning = new Dialog<String>();
 		saveGameWarning.setTitle("Save game?");
@@ -351,6 +385,11 @@ public class StrategyGameView extends Application {
 		saveGameWarning.showAndWait();
 	}
 	
+	/**
+	 * This function is displayed when a user wins a level.
+	 * 
+	 * @param completedLevelName (string) : name of the level file that was just compeleted
+	 */
 	public void displayNextLevelMenu(String completedLevelName) {
 		Dialog<String> endGameAlert = new Dialog<String>();
 		endGameAlert.setTitle("Game over!");
@@ -375,6 +414,11 @@ public class StrategyGameView extends Application {
 		endGameAlert.showAndWait();
 	}
 	
+	/**
+	 * This function is displayed when a user loses a level.
+	 * 
+	 * @param completedLevelName (string) : name of the level file that was just lost.
+	 */
 	public void displayRetryMenu(String completedLevelName) {
 		Dialog<String> endGameAlert = new Dialog<String>();
 		endGameAlert.setTitle("Game over!");
