@@ -1,5 +1,9 @@
 package controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -76,9 +80,14 @@ public class StrategyGameController{
 		return model.getTurn();
 	}
 	
-	//TODO
 	public void attack(int byRow, int byCol, int againstRow, int againstCol) {
-		
+		List<int[]> possible = getValidAttacks(byRow, byCol);
+		int[] against = {againstRow, againstCol};
+		if(possible.contains(against)) {
+			Piece by = model.getTile(byRow, byCol).getPiece();
+			by.attack(model, againstRow, againstCol);
+			model.setUpNotifyObservers();
+		}
 	}
 	
 	public void move(int fromRow, int fromCol, int toRow, int toCol) {
@@ -154,6 +163,7 @@ public class StrategyGameController{
 	}
 	
 	// Currently range attacks dont have to follow a straight line, will change later
+	// Ranged attackers can currently shoot through anything, will change later
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
@@ -321,15 +331,53 @@ public class StrategyGameController{
 		}
 	}
 	
-	//TODO
+	
 	public boolean isOver() {
+		boolean hasHuman = false;
+		boolean hasComputer = false;
+		int width = getBoardWidth();
+		int length = getBoardLength();
 		
-		return false;
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < length; y++) {
+				Tile tile = model.getTile(x, y);
+				if(tile.hasPlayer()) {
+					Piece piece = tile.getPiece();
+					if(piece.getTeam() == Team.HUMAN) {
+						hasHuman = true;
+					} else if(piece.getTeam() == Team.COMPUTER) {
+						hasComputer = true;
+					}
+				}
+				if((hasHuman) && (hasComputer)) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 	
-	//TODO
+	
 	public Team getWinner() {
+		int width = getBoardWidth();
+		int length = getBoardLength();
 		
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y < length; y++) {
+				Tile tile = model.getTile(x, y);
+				if(tile.hasPlayer()) {
+					Piece piece = tile.getPiece();
+					if(piece.getTeam() == Team.HUMAN) {
+						return Team.HUMAN;
+					} else if(piece.getTeam() == Team.COMPUTER) {
+						return Team.COMPUTER;
+					}
+				}
+			}
+		}
+		
+		// IF NEITHER TEAMS HAVE ANY PIECES:
+		return Team.COMPUTER;
 	}
 	
 	public int getBoardWidth() {
@@ -349,8 +397,14 @@ public class StrategyGameController{
 		model.nextTurn();
 	}
 	
-	//TODO
-	public void saveGame() {
-		
+	public void saveGame(String saveFileName) {
+		try {
+	    	File newFile = new File(saveFileName);
+			newFile.createNewFile();
+	    	FileOutputStream saveToFile = new FileOutputStream(saveFileName);
+		    ObjectOutputStream outputStream = new ObjectOutputStream(saveToFile);
+			outputStream.writeObject(model.getState());
+			outputStream.close();
+		} catch (IOException e) {}
 	}
 }
