@@ -7,3 +7,4 @@
 /Tile.class
 /InvalidMoveException.class
 /InvalidRemovalException.class
+/OutOfMovesException.class

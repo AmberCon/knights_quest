@@ -1,6 +1,6 @@
 package onboard;
 
-public class InvalidRemovalException extends Exception {
+public class InvalidRemovalException extends RuntimeException {
 
 	public InvalidRemovalException(String string) {
 	}
