@@ -8,3 +8,5 @@
 /InvalidMoveException.class
 /InvalidRemovalException.class
 /OutOfMovesException.class
+/FriendlyFireException.class
+/TileAndPieceTests.class

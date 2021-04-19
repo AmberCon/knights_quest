@@ -2,8 +2,21 @@ package onboard;
 
 import model.Team;
 
+/**
+ * This class defines stats for the Archer piece.
+ * 
+ * 
+ * @author Drake Sitaraman
+ *
+ */
 public class Archer extends Piece{
 	
+	/**
+	 * Defines stats for the Archer class. These can easily be changed
+	 * without removing functionality from the overall game.
+	 * 
+	 * @param team is the team of the Archer as an Enum.
+	 */
 	public Archer(Team team) {
 		super(); //Initialize Random
 		
@@ -29,6 +42,10 @@ public class Archer extends Piece{
 	}
 
 	@Override
+	/**
+	 * Resets move distance and reverts defend and attack
+	 * flags back to false.
+	 */
 	public void resetTurn() {
 		moveDistanceRemaining = 3;
 		isDefended = false;

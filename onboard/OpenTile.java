@@ -11,10 +11,19 @@ package onboard;
  */
 public class OpenTile extends Tile{
 	
+	/**
+	 * Default constructor, assumes there is no piece on it.
+	 */
 	public OpenTile() {
 		super.piece = null;
 	}
 	
+	/**
+	 * Alternate constructor to add a Piece standing on it by
+	 * default.
+	 * 
+	 * @param piece is a Piece object.
+	 */
 	public OpenTile(Piece piece) {
 		super.piece = piece;
 	}

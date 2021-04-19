@@ -2,8 +2,19 @@ package onboard;
 
 import java.io.Serializable;
 
+/**
+ * This class is the abstract implementation of a Tile. A "Tile"
+ * is a piece on the 2D array stored by the model. It has several
+ * characteristics, such as whether a piece can stand on it,
+ * whether a piece can move through it, whether a piece can shoot through
+ * it, or whether it is occupied or not. These are all handled
+ * by their respective derived classes.
+ * 
+ * @author Drake Sitaraman
+ *
+ */
 public abstract class Tile implements Serializable{
-	protected Piece piece;
+	protected Piece piece; //Piece who is standing on the tile
 	
 	/**
 	 * @return The Piece object at the tile or null if one does not exist.
@@ -52,8 +63,19 @@ public abstract class Tile implements Serializable{
 		return piece != null;
 	}
 	
+	/**
+	 * Abstract method for determining if a piece can move into it.
+	 * 
+	 * @return false if either a Blocked tile or if a piece is occupying
+	 * it. true otherwise.
+	 */
 	public abstract boolean canMoveInto();
 	
+	/**
+	 * Abstract method for determining if a piece can move into it.
+	 * 
+	 * @return false if a BlockedSeeThroughTile. true otherwise.
+	 */
 	public abstract boolean canShootThrough();
 
 }

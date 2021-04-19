@@ -2,8 +2,21 @@ package onboard;
 
 import model.Team;
 
+/**
+ * This class defines stats for the Knight piece.
+ * 
+ * 
+ * @author Drake Sitaraman
+ *
+ */
 public class Knight extends Piece{
 	
+	/**
+	 * Defines stats for the Knight class. These can easily be changed
+	 * without removing functionality from the overall game.
+	 * 
+	 * @param team is the team of the Knight as an Enum.
+	 */
 	public Knight(Team team) {
 		super(); //Initialize Random
 		
@@ -29,6 +42,10 @@ public class Knight extends Piece{
 	}
 	
 	@Override
+	/**
+	 * Resets move distance and reverts defend and attack
+	 * flags back to false.
+	 */
 	public void resetTurn() {
 		moveDistanceRemaining = 1;
 		isDefended = false;
