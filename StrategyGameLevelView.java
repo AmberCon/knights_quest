@@ -43,11 +43,11 @@ import model.StrategyGameModel.Team;
 public class StrategyGameLevelView implements Observer {
 	
 	BorderPane gameWindow;
-	GridPane board;
+	GridPane map;
 	Text message;
 	
-	int boardWidthPixel;
-	int boardHeightPixel;
+	int mapWidthPixel;
+	int mapHeightPixel;
 	
 	StrategyGameModel model;
 	StrategyGameController controller;
@@ -88,22 +88,22 @@ public class StrategyGameLevelView implements Observer {
 		
 		gameWindow.setBottom(bottomGUI);
 				
-		// Set up the board
+		// Set up the map
 		setBoard();
 	}
 	
 	private void setBoard() {
-		Image boardBackground = new Image(controller.getBackgroundImageFileName());
-		boardWidthPixel = (int) boardBackground.getWidth();
-		boardHeightPixel = (int) boardBackground.getHeight();
+		Image mapBackground = new Image(controller.getBackgroundImageFileName());
+		mapWidthPixel = (int) mapBackground.getWidth();
+		mapHeightPixel = (int) mapBackground.getHeight();
 		this.message.setText("");
 		VBox center = new VBox();
-		center.setPrefSize(boardWidthPixel, boardHeightPixel);
+		center.setPrefSize(mapWidthPixel, mapHeightPixel);
 		center.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		board = new GridPane();
-		board.setAlignment(Pos.BASELINE_CENTER);
-		board.setPrefSize(boardWidthPixel, boardHeightPixel);;
-		board.setBackground(new Background(new BackgroundImage(boardBackground,
+		map = new GridPane();
+		map.setAlignment(Pos.BASELINE_CENTER);
+		map.setPrefSize(mapWidthPixel, mapHeightPixel);;
+		map.setBackground(new Background(new BackgroundImage(mapBackground,
 							BackgroundRepeat.NO_REPEAT, 
 							BackgroundRepeat.NO_REPEAT, 
 							BackgroundPosition.CENTER, 
@@ -113,18 +113,18 @@ public class StrategyGameLevelView implements Observer {
 			for (int col = 0; col < controller.getBoardWidth(); col++) {
 				GridPane tile = new GridPane();
 				setTile(tile, row, col, true);
-				board.add(tile, col, row);
+				map.add(tile, col, row);
 			}
 		}
-		center.getChildren().add(board);
+		center.getChildren().add(map);
 		center.setAlignment(Pos.CENTER);;
 		gameWindow.setCenter(center);
 	}
 	
 	private void setTile(GridPane tile, int row, int col, boolean withEventFilters) {
 		
-		int tileWidth = Math.floorDiv(boardWidthPixel, controller.getBoardWidth());
-		int tileHeight = Math.floorDiv(boardHeightPixel, controller.getBoardLength());
+		int tileWidth = Math.floorDiv(mapWidthPixel, controller.getBoardWidth());
+		int tileHeight = Math.floorDiv(mapHeightPixel, controller.getBoardLength());
 		
 		tile.setPrefSize(tileWidth, tileHeight);
 		tile.setMaxSize(tileWidth, tileHeight);
@@ -222,13 +222,13 @@ public class StrategyGameLevelView implements Observer {
 			return;
 		}
 		
-		for (int boardRow = 0; boardRow < controller.getBoardLength(); boardRow++) {
-			for (int boardCol = 0; boardCol < controller.getBoardWidth(); boardCol++) {
+		for (int mapRow = 0; mapRow < controller.getBoardLength(); mapRow++) {
+			for (int mapCol = 0; mapCol < controller.getBoardWidth(); mapCol++) {
 				
 				GridPane tile = new GridPane();
-				setTile(tile, boardRow, boardCol, false);
+				setTile(tile, mapRow, mapCol, false);
 				
-				int[] curCoordinates = {boardRow, boardCol};
+				int[] curCoordinates = {mapRow, mapCol};
 				
 				boolean isAttack = false;
 				for (int[] coord : validAttacks) {
@@ -241,8 +241,8 @@ public class StrategyGameLevelView implements Observer {
 					
 					tile.setBackground(new Background(new BackgroundFill(Color.RED, new CornerRadii(5), Insets.EMPTY)));
 					
-					final int againstRow = boardRow;
-					final int againstCol = boardCol;
+					final int againstRow = mapRow;
+					final int againstCol = mapCol;
 					
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
@@ -264,7 +264,7 @@ public class StrategyGameLevelView implements Observer {
 				    tile.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 				}
 				
-				board.add(tile, boardCol, boardRow);
+				map.add(tile, mapCol, mapRow);
 			}
 		}
 	}
@@ -278,13 +278,13 @@ public class StrategyGameLevelView implements Observer {
 			return;
 		}
 		
-		for (int boardRow = 0; boardRow < controller.getBoardLength(); boardRow++) {
-			for (int boardCol = 0; boardCol < controller.getBoardWidth(); boardCol++) {
+		for (int mapRow = 0; mapRow < controller.getBoardLength(); mapRow++) {
+			for (int mapCol = 0; mapCol < controller.getBoardWidth(); mapCol++) {
 				
 				GridPane tile = new GridPane();
-				setTile(tile, boardRow, boardCol, false);
+				setTile(tile, mapRow, mapCol, false);
 				
-				int[] curCoordinates = {boardRow, boardCol};
+				int[] curCoordinates = {mapRow, mapCol};
 				
 				boolean isMove = false;
 				for (int[] coord : validMoves) {
@@ -297,8 +297,8 @@ public class StrategyGameLevelView implements Observer {
 					
 					tile.setBackground(new Background(new BackgroundFill(Color.YELLOW, new CornerRadii(5), Insets.EMPTY)));
 					
-					final int toRow = boardRow;
-					final int toCol = boardCol;
+					final int toRow = mapRow;
+					final int toCol = mapCol;
 					
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
@@ -320,7 +320,7 @@ public class StrategyGameLevelView implements Observer {
 				    tile.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 				}
 				
-				board.add(tile, boardCol, boardRow);
+				map.add(tile, mapCol, mapRow);
 			}
 		}
 	}
@@ -343,6 +343,11 @@ public class StrategyGameLevelView implements Observer {
 	
 	private void displayMessage(String message) {
 		this.message.setText(message);
+	}
+	
+	public int[] getMapDimensions() {
+		int[] dimensions = {mapWidthPixel, mapHeightPixel};
+		return dimensions;
 	}
 	
 	public void setHasRecentSave() {

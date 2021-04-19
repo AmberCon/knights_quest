@@ -73,7 +73,7 @@ public class StrategyGameView extends Application {
 		VBox centerGUI = new VBox();
 		
 		centerGUI.setPadding(new Insets(110,10,100,10));
-		centerGUI.setBackground(new Background(new BackgroundImage(new Image("assets/menu_background.jpg"), 
+		centerGUI.setBackground(new Background(new BackgroundImage(new Image("assets/menu_background.jpg"),
                 									BackgroundRepeat.NO_REPEAT, 
                 									BackgroundRepeat.NO_REPEAT, 
                 									BackgroundPosition.DEFAULT, 
@@ -151,7 +151,7 @@ public class StrategyGameView extends Application {
 			level.setPrefSize(100, 75);
 			level.setStyle("-fx-font-size:20");
 			level.setOnAction((event) -> {
-				startGame("level_" + Integer.toString(levelNum) + ".dat");
+				startGame("level_" + Integer.toString(levelNum) + ".dat"); // TODO: EDIT WITH AGREED UPON NAMING SCHEME
 			});
 			levels.add(level, i % 4, Math.floorDiv(i, 4));
 			ColumnConstraints levelColumn = new ColumnConstraints();
@@ -221,7 +221,7 @@ public class StrategyGameView extends Application {
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
 			save.setOnAction((event) -> {
-				startGame("saves/" + saveName + ".dat");
+				startGame("saves/" + saveName + ".dat"); // TODO: EDIT WITH AGREED UPON NAMING SCHEME
 			});
 			saves.getChildren().add(save);
 		}
@@ -278,7 +278,6 @@ public class StrategyGameView extends Application {
 	private void startGame(String levelFileName) {
 		
 		BorderPane gameWindow = new BorderPane();
-		Scene game = new Scene(gameWindow, 600, 600);
 		
 		// Top GUI
 		MenuBar topGUI = new MenuBar();
@@ -315,7 +314,9 @@ public class StrategyGameView extends Application {
 		gameWindow.setTop(topGUI);
 		
 		curGame = new StrategyGameLevelView(this, gameWindow, levelFileName);
+		int[] dimensions = curGame.getMapDimensions();
 		
+		Scene game = new Scene(gameWindow, dimensions[0]+50, dimensions[1]+50);
 		stage.setScene(game);
 	}
 	
@@ -328,7 +329,7 @@ public class StrategyGameView extends Application {
 		
 		Optional<String> fileName = saveGame.showAndWait();
 		
-		fileName.ifPresent(file -> curGame.controller.saveGame("save_files/" + file + ".dat"));
+		fileName.ifPresent(file -> curGame.controller.saveGame("save_files/" + file + ".dat")); // TODO: EDIT WITH AGREED UPON NAMING SCHEME
 		curGame.setHasRecentSave();
 	}
 	
@@ -352,6 +353,10 @@ public class StrategyGameView extends Application {
 	}
 	
 	public void displayNextLevelMenu(String completedLevelName) {
+		
+		// Unlock next level
+		unlockNextLevel(completedLevelName);
+		
 		Dialog<String> endGameAlert = new Dialog<String>();
 		endGameAlert.setTitle("Game over!");
 		
@@ -408,6 +413,13 @@ public class StrategyGameView extends Application {
 	
 	private String getNextLevel(String currentLevelName) {
 		return "level_2.dat";
+	}
+	
+	/**
+	 * PLACEHOLER
+	 */
+	private void unlockNextLevel(String completedLevelName) {
+		// TODO
 	}
 	
 	/**
