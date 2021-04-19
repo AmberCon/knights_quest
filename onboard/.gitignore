@@ -1,0 +1,9 @@
+/Archer.class
+/BlockedSeeThroughTile.class
+/BlockedTile.class
+/Knight.class
+/OpenTile.class
+/Piece.class
+/Tile.class
+/InvalidMoveException.class
+/InvalidRemovalException.class

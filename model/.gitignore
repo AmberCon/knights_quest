@@ -1,1 +1,8 @@
 /StrategyGameModel.class
+/Tile.class
+/OpenTile.class
+/BlockedTile.class
+/BlockedSeeThroughTile.class
+/Piece.class
+/Knight.class
+/Archer.class
