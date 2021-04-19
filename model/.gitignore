@@ -1,5 +1,6 @@
 /StrategyGameModel.class
 <<<<<<< HEAD
+<<<<<<< HEAD
 /Tile.class
 /OpenTile.class
 /BlockedTile.class
@@ -12,3 +13,7 @@
 /Team.class
 /BadSaveException.class
 >>>>>>> refs/remotes/origin/07-model
+=======
+/StrategyGameState.class
+/Scenario.class
+>>>>>>> refs/remotes/origin/08-saveGames
