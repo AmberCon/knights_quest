@@ -44,7 +44,7 @@ public class StrategyGameModel extends Observable{
 	 */
 	public StrategyGameModel(String filename) throws BadSaveException {
 		try (ObjectInputStream objIn = 
-				new ObjectInputStream(new FileInputStream("save_game.dat"));){
+				new ObjectInputStream(new FileInputStream(filename));){
 			StrategyGameState state = (StrategyGameState) objIn.readObject();
 			this.state = state;
 			if(this.state == null || this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
@@ -52,10 +52,8 @@ public class StrategyGameModel extends Observable{
 			}
 		} catch (IOException | ClassNotFoundException | ClassCastException e) {
 			throw new BadSaveException();
-		} 
+		}
 	}
-	
-	
 	
 	/**
 	 * Returns the tile at the given row and column

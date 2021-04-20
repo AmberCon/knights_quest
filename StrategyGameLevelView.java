@@ -113,6 +113,7 @@ public class StrategyGameLevelView implements Observer {
 	 * Sets up the board
 	 */
 	private void setBoard() {
+		System.out.println(controller.getBackgroundImageFileName());
 		Image mapBackground = new Image(controller.getBackgroundImageFileName());
 		mapWidthPixel = (int) mapBackground.getWidth();
 		mapHeightPixel = (int) mapBackground.getHeight();
