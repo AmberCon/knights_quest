@@ -405,7 +405,10 @@ public class StrategyGameController{
 	public void nextTurn() {
 		for (int row = 0; row < model.getBoardHeight(); row++) {
 			for (int col = 0; col < model.getBoardWidth(); col++) {
-				model.getTile(row, col).getPiece().resetTurn();
+				if (model.getTile(row,col).hasPlayer()) {
+					model.getTile(row, col).getPiece().resetTurn();
+				}
+				
 			}
 		}
 		model.nextTurn();

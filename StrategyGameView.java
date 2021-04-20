@@ -525,7 +525,7 @@ public class StrategyGameView extends Application {
 		List<String> saves = new ArrayList<String>();
 		File savesDir = new File("saves");
 		for (String save : savesDir.list()) {
-			saves.add(save.substring(0,-4));
+			saves.add(save.replaceAll("(.dat)", ""));
 		}
 		return saves;
 	}
