@@ -152,6 +152,7 @@ public class StrategyGameController{
 			Piece piece = tile.getPiece();
 			piece.defend();
 		}
+		model.setUpNotifyObservers();
 	}
 	
 	//TODO
@@ -412,6 +413,7 @@ public class StrategyGameController{
 			}
 		}
 		model.nextTurn();
+		model.setUpNotifyObservers();
 	}
 	
 	public void saveGame(String saveFileName) {
