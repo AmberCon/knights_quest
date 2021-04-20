@@ -32,8 +32,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.BadSaveException;
 import model.StrategyGameModel;
-import model.StrategyGameModel.Team;
+import model.Team;
+
 
 /**
  * 
@@ -75,7 +77,12 @@ public class StrategyGameLevelView implements Observer {
 		saveUpToDate = true;
 			
 		// Set up model and controller
-		model = new StrategyGameModel(levelFileName); // TODO: ADD ERROR HANDLING
+		try {
+			model = new StrategyGameModel(levelFileName);
+		} catch (BadSaveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} // TODO: ADD ERROR HANDLING
 		model.addObserver(this);
 		controller = new StrategyGameController(model);
 				

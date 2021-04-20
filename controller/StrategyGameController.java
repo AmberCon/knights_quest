@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import model.StrategyGameModel;
+import model.Team;
+import onboard.Piece;
+import onboard.Tile;
 /**
  * 
  * @author Saul Weintraub
@@ -131,14 +134,14 @@ public class StrategyGameController{
 				if(Arrays.equals(curCoord, destination)) {
 					distances.add(curDistance);
 				}
-				findShortestMoveHelper(curRow + 1, curCol, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow + 1, curCol + 1, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow + 1, curCol - 1, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow, curCol - 1, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow, curCol + 1, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow - 1, curCol, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow - 1, curCol + 1, destination, curDistance + 1, distanceRemaining, distance);
-				findShortestMoveHelper(curRow - 1, curCol - 1, destination, curDistance + 1, distanceRemaining, distance);
+				findShortestMoveHelper(curRow + 1, curCol, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow + 1, curCol + 1, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow + 1, curCol - 1, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow, curCol - 1, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow, curCol + 1, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow - 1, curCol, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow - 1, curCol + 1, destination, curDistance + 1, distanceRemaining, distances);
+				findShortestMoveHelper(curRow - 1, curCol - 1, destination, curDistance + 1, distanceRemaining, distances);
 			}
 		}
 	}
@@ -175,7 +178,7 @@ public class StrategyGameController{
 		int length = getBoardLength();
 		if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
 			if(model.getTile(row, col).hasPlayer()) {
-				if(!model.getTile(row, col).getPiece().getTeam.equals(team)) {
+				if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
 					int[] coord = {row, col};
 					if(!possible.contains(coord)) {
 						possible.add(coord);

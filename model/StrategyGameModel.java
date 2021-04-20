@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Observable;
 
+import onboard.Tile;
+
 
 
 /**
@@ -38,8 +40,9 @@ public class StrategyGameModel extends Observable{
 	 * Creates a new StrategyGameModel from a saved StrategyGameState
 	 * 
 	 * @param filename the filename of the saved StrategyGameState
+	 * @throws BadSaveException if the save couldn't be loaded
 	 */
-	public StrategyGameModel(String filename) {
+	public StrategyGameModel(String filename) throws BadSaveException {
 		try (ObjectInputStream objIn = 
 				new ObjectInputStream(new FileInputStream("save_game.dat"));){
 			StrategyGameState state = (StrategyGameState) objIn.readObject();
@@ -60,7 +63,7 @@ public class StrategyGameModel extends Observable{
 	 * @param col the column of the tile to get, as an int
 	 * @return the Tile at the given row and column
 	 */
-	Tile getTile(int row, int col){
+	public Tile getTile(int row, int col){
 		return state.board[row][col];
 	}
 	
@@ -116,4 +119,12 @@ public class StrategyGameModel extends Observable{
 		return state;
 	}
 	
+	/**
+	 * Public method for notifying observers
+	 */
+	public void setUpNotifyObservers() {
+		setChanged();
+		notifyObservers();
+	}
 	
+}	
