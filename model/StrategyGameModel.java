@@ -32,6 +32,7 @@ import java.util.Observable;
 public class StrategyGameModel extends Observable{
 
 	private StrategyGameState state;
+
 	
 	/**
 	 * Creates a new StrategyGameModel from a saved StrategyGameState

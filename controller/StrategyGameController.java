@@ -14,9 +14,11 @@ import model.StrategyGameModel;
  * @author Saul Weintraub
  *
  */
+
 public class StrategyGameController{
 	StrategyGameModel model;
 	
+
 	public StrategyGameController(StrategyGameModel model) {
 		this.model = model;
 	}
@@ -411,4 +413,5 @@ public class StrategyGameController{
 			outputStream.close();
 		} catch (IOException e) {}
 	}
+
 }

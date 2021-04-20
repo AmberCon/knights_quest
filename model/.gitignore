@@ -2,6 +2,7 @@
 /StrategyGameModel.class
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /Tile.class
 /OpenTile.class
 /BlockedTile.class
@@ -21,3 +22,10 @@
 =======
 /StrategyGameModel.class
 >>>>>>> refs/remotes/origin/controller
+=======
+/Tile.class
+/Piece.class
+/OpenTile.class
+/Archer.class
+/StrategyGameModel$Team.class
+>>>>>>> refs/remotes/origin/view-01
