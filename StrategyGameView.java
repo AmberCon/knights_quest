@@ -1,9 +1,13 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
+import java.util.Scanner;
 
 import javafx.application.Application;
 import javafx.geometry.HPos;
@@ -394,10 +398,20 @@ public class StrategyGameView extends Application {
 		var exitButton = (Button) endGameAlert.getDialogPane().lookupButton(exitButtonType);
         
         nextButton.setOnAction((event) -> {
-        	startGame(getNextLevel(completedLevelName));
+        	String nextLevelName = getAndUnlockNextLevel(completedLevelName);
+        	if (nextLevelName != "") {
+        		startGame(nextLevelName);
+        	} else {
+        		stage.setScene(mainMenu);
+        		Dialog<String> noMoreLevels = new Dialog<String>();
+        		noMoreLevels.setTitle("No more levels!");
+        		noMoreLevels.setHeaderText("You have beat the game!");
+        		noMoreLevels.setContentText("There are no more levels to unlock.");
+        		noMoreLevels.showAndWait();
+        	}
         });
         exitButton.setOnAction((event) -> {
-        	stage.setScene(mainMenu);;
+        	stage.setScene(mainMenu);
         });
         
 		endGameAlert.showAndWait();
@@ -434,34 +448,85 @@ public class StrategyGameView extends Application {
 	
 	
 	/**
-	 * PLACEHOLDER
+	 * Returns the name of the next level.
 	 * 
-	 * @return the name of the next level
+	 * @return String : the name of the next level
 	 */
 	
-	private String getNextLevel(String currentLevelName) {
-		return "level_2.dat";
+	private String getAndUnlockNextLevel(String currentLevelName) {
+		int nextLevelNum = Integer.parseInt(currentLevelName.substring(-5)) + 1;
+		if (nextLevelNum > numLevels) {
+			return "";
+		}
+		return "levels/level_" + Integer.toString(nextLevelNum) + " .dat";
 	}
 	
 	/**
-	 * PLACEHOLDER
+	 * Unlocks the next level
+	 * 
+	 * @param completedLevelName (String) : the name of the level that was just completed.
+	 */
+	private void unlockNextLevel(String completedLevelName) {
+		int levelNum = Integer.parseInt(completedLevelName.substring(-5));
+		File unlockedLevels = new File("profile/unlockedLevels.info");
+		try {
+			if (!unlockedLevels.exists()) {
+				try {
+					unlockedLevels.createNewFile();
+					FileWriter levelWriter = new FileWriter("profile/completedLevels.info");
+					levelWriter.write("1");
+					levelWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				FileWriter levelWriter = new FileWriter("profile/completedLevels.info");
+				levelWriter.write("," + Integer.toString(levelNum));
+				levelWriter.close();
+			}
+		} catch (IOException e) {
+				e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * returns a list of all levels that are allowed to be played
 	 * 
 	 * @return List<Integer>: a list of all levels unlocked
 	 */
 	private List<Integer> getUnlockedLevels() {
 		List<Integer> unlockedLevels = new ArrayList<Integer>();
-		unlockedLevels.add(1);
+		File completedLevelFile = new File("profile/completedLevels.info");
+		Scanner completedLevelScanner = null;
+		try {
+			completedLevelScanner = new Scanner(completedLevelFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String[] completedLevels = completedLevelScanner.next().strip().split(",");
+		int levelNum = 0;
+		for (String level : completedLevels) {
+			levelNum = Integer.parseInt(level);
+			unlockedLevels.add(levelNum);
+		}
+		if (levelNum < numLevels) {
+			unlockedLevels.add(levelNum + 1);
+		}
 		return unlockedLevels;
 	}
 	
 	/**
-	 * PLACEHOLDER
+	 * Returns a list of all save file names
 	 * 
 	 * @return List<String>: a list of all save file names
 	 */
 	private List<String> getSaves() {
 		List<String> saves = new ArrayList<String>();
-		saves.add("ambers-save");
+		File savesDir = new File("saves");
+		for (String save : savesDir.list()) {
+			saves.add(save.substring(0,-4));
+		}
 		return saves;
 	}
 	
