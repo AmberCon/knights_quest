@@ -92,7 +92,7 @@ public class StrategyGameController{
 	public void attack(int byRow, int byCol, int againstRow, int againstCol) {
 		List<int[]> possible = getValidAttacks(byRow, byCol);
 		int[] against = {againstRow, againstCol};
-		if(possible.contains(against)) {
+		if(isInList(possible, against)) {
 			Piece by = model.getTile(byRow, byCol).getPiece();
 			by.attack(model, againstRow, againstCol);
 			model.setUpNotifyObservers();
@@ -102,7 +102,7 @@ public class StrategyGameController{
 	public void move(int fromRow, int fromCol, int toRow, int toCol) {
 		List<int[]> possible = getValidMoves(fromRow, fromCol);
 		int[] to= {toRow, toCol};
-		if(possible.contains(to)) {
+		if(isInList(possible, to)) {
 			Tile toTile = model.getTile(toRow, toCol);
 			Tile fromTile = model.getTile(fromRow, fromCol);
 			Piece fromPiece = fromTile.getPiece();
@@ -181,7 +181,7 @@ public class StrategyGameController{
 			if(model.getTile(row, col).hasPlayer()) {
 				if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
 					int[] coord = {row, col};
-					if(!possible.contains(coord)) {
+					if(!isInList(possible, coord)) {
 						possible.add(coord);
 					}
 				}
@@ -223,7 +223,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && (col >= 0) && (col < width)) {
 				if(model.getTile(row - 1, col).canMoveInto()) {
 					int[] coordinate = {row - 1, col};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col, remaining - 1, possible);
@@ -238,7 +238,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row - 1, col + 1).canMoveInto()) {
 					int[] coordinate = {row - 1, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col + 1, remaining - 1, possible);
@@ -253,7 +253,7 @@ public class StrategyGameController{
 			if((row >= 0) && (row < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row, col + 1).canMoveInto()) {
 					int[] coordinate = {row, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row, col + 1, remaining - 1, possible);
@@ -268,7 +268,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row + 1, col + 1).canMoveInto()) {
 					int[] coordinate = {row + 1, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col + 1, remaining - 1, possible);
@@ -283,7 +283,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && (col >= 0) && (col < width)) {
 				if(model.getTile(row + 1, col).canMoveInto()) {
 					int[] coordinate = {row + 1, col};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col, remaining - 1, possible);
@@ -299,7 +299,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row + 1, col - 1).canMoveInto()) {
 					int[] coordinate = {row + 1, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col - 1, remaining - 1, possible);
@@ -315,7 +315,7 @@ public class StrategyGameController{
 			if((row >= 0) && (row < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row, col - 1).canMoveInto()) {
 					int[] coordinate = {row, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row, col - 1, remaining - 1, possible);
@@ -331,7 +331,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row - 1, col - 1).canMoveInto()) {
 					int[] coordinate = {row - 1, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col - 1, remaining - 1, possible);
@@ -339,6 +339,14 @@ public class StrategyGameController{
 			}
 			
 		}
+	}
+	private boolean isInList(List<int[]> list, final int[] array){
+		for(int[] item : list){
+			if(Arrays.equals(item, array)){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
