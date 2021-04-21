@@ -11,6 +11,7 @@ import model.Team;
  */
 public class Knight extends Piece{
 	
+	
 	/**
 	 * Defines stats for the Knight class. These can easily be changed
 	 * without removing functionality from the overall game.

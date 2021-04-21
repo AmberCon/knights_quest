@@ -160,7 +160,8 @@ public class StrategyGameController{
 		int[] against = {againstRow, againstCol};
 		if(isInList(possible, against)) {
 			Piece by = model.getTile(byRow, byCol).getPiece();
-			by.attack(model, againstRow, againstCol);
+			Tile againstTile = model.getTile(againstRow, againstCol);
+			by.attack(againstTile);
 			model.setUpNotifyObservers();
 		}
 	}
