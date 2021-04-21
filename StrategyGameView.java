@@ -384,6 +384,7 @@ public class StrategyGameView extends Application {
 	 * @param completedLevelName (string) : name of the level file that was just compeleted
 	 */
 	public void displayNextLevelMenu(String completedLevelName) {
+		unlockNextLevel(completedLevelName);
 		Dialog<String> endGameAlert = new Dialog<String>();
 		endGameAlert.setTitle("Game over!");
 		
