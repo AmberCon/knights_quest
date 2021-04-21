@@ -10,7 +10,7 @@ package onboard;
  * @author Drake Sitaraman
  *
  */
-public class OutOfMovesException extends RuntimeException {
+public class OutOfMovesException extends Exception {
 
 	public OutOfMovesException(String string) {
 	}
