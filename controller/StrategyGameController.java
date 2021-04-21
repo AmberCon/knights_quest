@@ -20,17 +20,35 @@ import onboard.Tile;
 
 public class StrategyGameController{
 	StrategyGameModel model;
-	
 
+	/**
+	 * This is the constructor for the controller.
+	 * 
+	 * @param model The model that the controller will use to perform its methods
+	 */
 	public StrategyGameController(StrategyGameModel model) {
 		this.model = model;
 	}
 	
+	/**
+	 * This method will return if there is a piece at the specified tile.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return true if there is a piece at the coordinates, else false
+	 */
 	public boolean hasPlayer(int row, int col) {
 		Tile tile = model.getTile(row, col);
 		return tile.hasPlayer();
 	}
 	
+	/**
+	 * This method returns the file name of the sprite for the piece at the given coordinates.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return The filename of the sprite for the piece
+	 */
 	public String getPieceSprite(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -40,6 +58,13 @@ public class StrategyGameController{
 		return "";
 	}
 	
+	/**
+	 * This method returns the health of the piece at the coordinates.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return The health of the piece located at the specified coordinates.
+	 */
 	public int getPieceHealth(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -48,7 +73,13 @@ public class StrategyGameController{
 		}
 		return 0;
 	}
-	
+	/**
+	 * This method will return which team the piece at the specified coordinates belongs too.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return The enum that represents which team the piece belongs to. COMPUTER or HUMAN
+	 */
 	public Team getPieceTeam(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -57,7 +88,13 @@ public class StrategyGameController{
 		}
 		return null;
 	}
-	
+	/**
+	 * This method will return how much movement the piece at the specified coordinates has left.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return The amount of movement the piece at the coordinates has left
+	 */
 	public int getMoveDistanceRemaining(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -67,6 +104,13 @@ public class StrategyGameController{
 		return 0;
 	}
 	
+	/**
+	 * This method will return true if the piece at the coordinates has attacked or defended.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return Whether or not the piece has attacked or defended
+	 */
 	public boolean hasAttackedOrDefended(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -76,6 +120,13 @@ public class StrategyGameController{
 		return false;
 	}
 	
+	/**
+	 * This method will return whether or not the piece at the coordinates is currently defending.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return If the piece is currently defending.
+	 */
 	public boolean isDefended(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
@@ -85,24 +136,48 @@ public class StrategyGameController{
 		return false;
 	}
 	
+	/**
+	 * This method will return whose turn it currently is in the game.
+	 * 
+	 * @return whose turn it is. HUMAN or COMPUTER
+	 */
 	public Team getTurn() {
 		return model.getTurn();
 	}
 	
+	/**
+	 * This method will simulate an attack for the game. The piece at the "by" coordinates will
+	 * attack the piece at the "against" coordinates if it is a valid attack. The method will
+	 * then notify the observer for the view.
+	 * 
+	 * @param byRow The y coordinate of the attacker
+	 * @param byCol The x coordinate of the attacker
+	 * @param againstRow The y coordinate of the attacked
+	 * @param againstCol The x coordinate of the attacked
+	 */
 	public void attack(int byRow, int byCol, int againstRow, int againstCol) {
 		List<int[]> possible = getValidAttacks(byRow, byCol);
 		int[] against = {againstRow, againstCol};
-		if(possible.contains(against)) {
+		if(isInList(possible, against)) {
 			Piece by = model.getTile(byRow, byCol).getPiece();
 			by.attack(model, againstRow, againstCol);
 			model.setUpNotifyObservers();
 		}
 	}
 	
+	/**
+	 * This method will move the piece at the "from" coordinates to the tile at the "to" coordinates
+	 * if it is a valid move.
+	 * 
+	 * @param fromRow The y coordinate of the current location of the piece
+	 * @param fromCol The x coordinate of the current location of the piece
+	 * @param toRow The y coordinate of where the piece wants to move to
+	 * @param toCol The x coordinate of where the piece wants to move to
+	 */
 	public void move(int fromRow, int fromCol, int toRow, int toCol) {
 		List<int[]> possible = getValidMoves(fromRow, fromCol);
 		int[] to= {toRow, toCol};
-		if(possible.contains(to)) {
+		if(isInList(possible, to)) {
 			Tile toTile = model.getTile(toRow, toCol);
 			Tile fromTile = model.getTile(fromRow, fromCol);
 			Piece fromPiece = fromTile.getPiece();
@@ -113,6 +188,16 @@ public class StrategyGameController{
 		}
 	}
 	
+	/**
+	 * This method will find the least amount of movement required for a piece to move to a
+	 * specified tile.
+	 * 
+	 * @param fromRow The y coordinate of the current location of the piece
+	 * @param fromCol The x coordinate of the current location of the piece
+	 * @param toRow The y coordinate of where the piece wants to move to
+	 * @param toCol The x coordinate of where the piece wants to move to
+	 * @return The least amount of movement necessary to move to the designated tile
+	 */
 	private int findShortestMove(int fromRow, int fromCol, int toRow, int toCol) {
 		Piece piece = model.getTile(fromRow, fromCol).getPiece();
 		int distanceRemaining = piece.getMoveDistanceRemaining();
@@ -125,6 +210,16 @@ public class StrategyGameController{
 		return distances.get(0);
 	}
 	
+	/**
+	 * This method is a helper method that will help findShorestMove().
+	 * 
+	 * @param curRow The current y coordinate
+	 * @param curCol The current x coordinate
+	 * @param destination The array of the destination
+	 * @param curDistance How far currently traveled
+	 * @param distanceRemaining How much the piece is able to move
+	 * @param distances A list of all possible distances that is being populated recursively
+	 */
 	private void findShortestMoveHelper(int curRow, int curCol, int[] destination, int curDistance, int distanceRemaining, List<Integer> distances) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
@@ -146,12 +241,19 @@ public class StrategyGameController{
 		}
 	}
 	
+	/**
+	 * This method will cause the piece located at the specified coordinates defend.
+	 * 
+	 * @param row The y axis coordinate of the piece
+	 * @param col The x axis coordinate of the piece
+	 */
 	public void defend(int row, int col) {
 		if(hasPlayer(row, col)) {
 			Tile tile = model.getTile(row, col);
 			Piece piece = tile.getPiece();
 			piece.defend();
 		}
+		model.setUpNotifyObservers();
 	}
 	
 	//TODO
@@ -160,6 +262,14 @@ public class StrategyGameController{
 	}
 	
 	
+	/**
+	 * This method will create a list of the coordinates a piece can attack and then return that
+	 * list.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return A list of all the coordinates the piece can attack
+	 */
 	public List<int[]> getValidAttacks(int row, int col){
 		List<int[]> possible = new ArrayList<int[]>();
 		Piece piece = model.getTile(row, col).getPiece();
@@ -173,6 +283,16 @@ public class StrategyGameController{
 	
 	// Currently range attacks dont have to follow a straight line, will change later
 	// Ranged attackers can currently shoot through anything, will change later
+	/**
+	 * This method is a helper method for getValidAttacks(). This method will populate a list
+	 * of coordinates that the piece is able to attack.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @param range The attack range of the piece
+	 * @param team The team of the piece
+	 * @param possible A list of the coordinates the piece can attack
+	 */
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
@@ -180,7 +300,7 @@ public class StrategyGameController{
 			if(model.getTile(row, col).hasPlayer()) {
 				if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
 					int[] coord = {row, col};
-					if(!possible.contains(coord)) {
+					if(!isInList(possible, coord)) {
 						possible.add(coord);
 					}
 				}
@@ -199,6 +319,14 @@ public class StrategyGameController{
 		}
 	}
 	
+	/**
+	 * This method will create a list of the coordinates a piece can move to and then return that
+	 * list.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return A list of all the coordinates the piece can move to
+	 */
 	public List<int[]> getValidMoves(int row, int col){
 		int speed = getMoveDistanceRemaining(row, col);
 		
@@ -210,6 +338,15 @@ public class StrategyGameController{
 	}
 	
 	//TODO simplify this by a lot, make it similar to getValidAttacksHelper
+	/**
+	 * This method is a helper method for getValidMoves(). This method will populate a list
+	 * of coordinates that the piece is able to move to.
+	 * 
+	 * @param row The y axis coordinate of the piece
+	 * @param col The x axis coordinate of the piece
+	 * @param remaining How many tiles the piece is able to move
+	 * @param possible A list of all the coordinates the piece can move to
+	 */
 	private void getValidMovesHelper(int row, int col, int remaining, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
@@ -222,7 +359,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && (col >= 0) && (col < width)) {
 				if(model.getTile(row - 1, col).canMoveInto()) {
 					int[] coordinate = {row - 1, col};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col, remaining - 1, possible);
@@ -237,7 +374,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row - 1, col + 1).canMoveInto()) {
 					int[] coordinate = {row - 1, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col + 1, remaining - 1, possible);
@@ -252,7 +389,7 @@ public class StrategyGameController{
 			if((row >= 0) && (row < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row, col + 1).canMoveInto()) {
 					int[] coordinate = {row, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row, col + 1, remaining - 1, possible);
@@ -267,7 +404,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && ((col + 1) >= 0) && ((col + 1) < width)) {
 				if(model.getTile(row + 1, col + 1).canMoveInto()) {
 					int[] coordinate = {row + 1, col + 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col + 1, remaining - 1, possible);
@@ -282,7 +419,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && (col >= 0) && (col < width)) {
 				if(model.getTile(row + 1, col).canMoveInto()) {
 					int[] coordinate = {row + 1, col};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col, remaining - 1, possible);
@@ -298,7 +435,7 @@ public class StrategyGameController{
 			if(((row + 1) >= 0) && ((row + 1) < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row + 1, col - 1).canMoveInto()) {
 					int[] coordinate = {row + 1, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row + 1, col - 1, remaining - 1, possible);
@@ -314,7 +451,7 @@ public class StrategyGameController{
 			if((row >= 0) && (row < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row, col - 1).canMoveInto()) {
 					int[] coordinate = {row, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row, col - 1, remaining - 1, possible);
@@ -330,7 +467,7 @@ public class StrategyGameController{
 			if(((row - 1) >= 0) && ((row - 1) < length) && ((col - 1) >= 0) && ((col - 1) < width)) {
 				if(model.getTile(row - 1, col - 1).canMoveInto()) {
 					int[] coordinate = {row - 1, col - 1};
-					if(!possible.contains(coordinate)) {
+					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
 					getValidMovesHelper(row - 1, col - 1, remaining - 1, possible);
@@ -340,7 +477,28 @@ public class StrategyGameController{
 		}
 	}
 	
+	/**
+	 * This method will return whether or not an int[] is located inside of a List<int[]>.
+	 * 
+	 * @param list A List<int[]>
+	 * @param array The int[] that is being tested if it is in the list
+	 * @return true if the array is in the list, else false.
+	 */
+	private boolean isInList(List<int[]> list, final int[] array){
+		for(int[] item : list){
+			if(Arrays.equals(item, array)){
+				return true;
+			}
+		}
+		return false;
+	}
 	
+	/**
+	 * This method will determine if the game is over. If one or both teams doesn't have any pieces
+	 * remaining then the game is over.
+	 * 
+	 * @return if the game is over
+	 */
 	public boolean isOver() {
 		boolean hasHuman = false;
 		boolean hasComputer = false;
@@ -366,7 +524,12 @@ public class StrategyGameController{
 		return true;
 	}
 	
-	
+	/**
+	 * This method will return the winner of the game. This method will only be correct if isOver()
+	 * is true.
+	 * 
+	 * @return The winner of the game
+	 */
 	public Team getWinner() {
 		int width = getBoardWidth();
 		int length = getBoardLength();
@@ -389,23 +552,55 @@ public class StrategyGameController{
 		return Team.COMPUTER;
 	}
 	
+	/**
+	 * This method will return the width of the board
+	 * 
+	 * @return the width of the board
+	 */
 	public int getBoardWidth() {
 		return model.getBoardWidth();
 	}
 	
+	/**
+	 * This method will return the length of the board
+	 * 
+	 * @return the length of the board
+	 */
 	public int getBoardLength() {
-		
 		return model.getBoardHeight();
 	}
 	
+	/**
+	 * This method will return the file name of the background image of the board.
+	 * 
+	 * @return the file name of the background image of the board
+	 */
 	public String getBackgroundImageFileName() {
 		return model.getBackgroundImageFileName();
 	}
 	
+	/**
+	 * This method will advance the game to the next turn.
+	 * 
+	 */
 	public void nextTurn() {
+		for (int row = 0; row < model.getBoardHeight(); row++) {
+			for (int col = 0; col < model.getBoardWidth(); col++) {
+				if (model.getTile(row,col).hasPlayer()) {
+					model.getTile(row, col).getPiece().resetTurn();
+				}
+				
+			}
+		}
 		model.nextTurn();
+		model.setUpNotifyObservers();
 	}
 	
+	/**
+	 * This method will create a save file containing the current game data.
+	 * 
+	 * @param saveFileName The name of the save file that will be created.
+	 */
 	public void saveGame(String saveFileName) {
 		try {
 	    	File newFile = new File(saveFileName);

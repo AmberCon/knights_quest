@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -79,10 +80,7 @@ public class StrategyGameLevelView implements Observer {
 		// Set up model and controller
 		try {
 			model = new StrategyGameModel(levelFileName);
-		} catch (BadSaveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} // TODO: ADD ERROR HANDLING
+		} catch (BadSaveException e) {} // TODO: ADD ERROR HANDLING
 		model.addObserver(this);
 		controller = new StrategyGameController(model);
 				
