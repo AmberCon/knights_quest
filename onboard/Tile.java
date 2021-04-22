@@ -14,6 +14,7 @@ import java.io.Serializable;
  *
  */
 public abstract class Tile implements Serializable{
+	
 	protected Piece piece; //Piece who is standing on the tile
 	
 	/**

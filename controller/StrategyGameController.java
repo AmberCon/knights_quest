@@ -10,6 +10,10 @@ import java.util.List;
 
 import model.StrategyGameModel;
 import model.Team;
+import onboard.FriendlyFireException;
+import onboard.InvalidMoveException;
+import onboard.InvalidRemovalException;
+import onboard.OutOfMovesException;
 import onboard.Piece;
 import onboard.Tile;
 /**
@@ -154,13 +158,16 @@ public class StrategyGameController{
 	 * @param byCol The x coordinate of the attacker
 	 * @param againstRow The y coordinate of the attacked
 	 * @param againstCol The x coordinate of the attacked
+	 * @throws InvalidRemovalException 
+	 * @throws FriendlyFireException 
 	 */
-	public void attack(int byRow, int byCol, int againstRow, int againstCol) {
+	public void attack(int byRow, int byCol, int againstRow, int againstCol) throws FriendlyFireException, InvalidRemovalException {
 		List<int[]> possible = getValidAttacks(byRow, byCol);
 		int[] against = {againstRow, againstCol};
 		if(isInList(possible, against)) {
 			Piece by = model.getTile(byRow, byCol).getPiece();
-			by.attack(model, againstRow, againstCol);
+			Tile againstTile = model.getTile(againstRow, againstCol);
+			by.attack(againstTile);
 			model.setUpNotifyObservers();
 		}
 	}
@@ -173,8 +180,11 @@ public class StrategyGameController{
 	 * @param fromCol The x coordinate of the current location of the piece
 	 * @param toRow The y coordinate of where the piece wants to move to
 	 * @param toCol The x coordinate of where the piece wants to move to
+	 * @throws InvalidRemovalException 
+	 * @throws InvalidMoveException 
+	 * @throws OutOfMovesException 
 	 */
-	public void move(int fromRow, int fromCol, int toRow, int toCol) {
+	public void move(int fromRow, int fromCol, int toRow, int toCol) throws InvalidRemovalException, InvalidMoveException, OutOfMovesException {
 		List<int[]> possible = getValidMoves(fromRow, fromCol);
 		int[] to= {toRow, toCol};
 		if(isInList(possible, to)) {

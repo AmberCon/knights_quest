@@ -369,7 +369,7 @@ public class StrategyGameView extends Application {
 		
 		saveGameWarning.getDialogPane().getButtonTypes().addAll(saveButtonType, exitButtonType);
 		
-		var saveButton = (Button) saveGameWarning.getDialogPane().lookupButton(saveButtonType);
+		Button saveButton = (Button) saveGameWarning.getDialogPane().lookupButton(saveButtonType);
         
         saveButton.setOnAction((event) -> {
         	save();
@@ -395,8 +395,8 @@ public class StrategyGameView extends Application {
 		
 		endGameAlert.getDialogPane().getButtonTypes().addAll(nextButtonType, exitButtonType);
 		
-		var nextButton = (Button) endGameAlert.getDialogPane().lookupButton(nextButtonType);
-		var exitButton = (Button) endGameAlert.getDialogPane().lookupButton(exitButtonType);
+		Button nextButton = (Button) endGameAlert.getDialogPane().lookupButton(nextButtonType);
+		Button exitButton = (Button) endGameAlert.getDialogPane().lookupButton(exitButtonType);
         
         nextButton.setOnAction((event) -> {
         	String nextLevelName = getAndUnlockNextLevel(completedLevelName);
@@ -434,8 +434,8 @@ public class StrategyGameView extends Application {
 		
 		endGameAlert.getDialogPane().getButtonTypes().addAll(nextButtonType, exitButtonType);
 		
-		var nextButton = (Button) endGameAlert.getDialogPane().lookupButton(nextButtonType);
-		var exitButton = (Button) endGameAlert.getDialogPane().lookupButton(exitButtonType);
+		Button nextButton = (Button) endGameAlert.getDialogPane().lookupButton(nextButtonType);
+		Button exitButton = (Button) endGameAlert.getDialogPane().lookupButton(exitButtonType);
         
         nextButton.setOnAction((event) -> {
         	startGame(completedLevelName);

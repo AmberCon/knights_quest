@@ -11,6 +11,7 @@ package onboard;
  */
 public class OpenTile extends Tile{
 	
+	
 	/**
 	 * Default constructor, assumes there is no piece on it.
 	 */

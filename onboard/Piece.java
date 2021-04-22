@@ -16,6 +16,8 @@ import model.Team;
  *
  */
 public abstract class Piece implements Serializable{
+	protected static final long serialVersionUID = 1L;
+	
 	protected int health;
 	
 	protected int[] attackRange = new int[2];
@@ -63,21 +65,21 @@ public abstract class Piece implements Serializable{
 	 * This method gets the piece to attack at a particular row and column,
 	 * then generates a random attack value within the attack range.
 	 * 
-	 * @param model is a StrategyGameModel, used to fetch the Tile and Piece.
-	 * @param row is the row to attack as an int.
-	 * @param col is the col to attack as an int.
+	 * @param tileToAttack is the tile being attack. It should have a Piece on it.
+	 * @throws FriendlyFireException if the Piece attempts to attack a member of the same
+	 * team
+	 * @throws InvalidRemovalException 
 	 */
-	public void attack(StrategyGameModel model, int row, int col) {
-		Tile tileToAttack = model.getTile(row, col);
+	public void attack(Tile tileToAttack) throws FriendlyFireException, InvalidRemovalException {
 		Piece pieceToAttack = tileToAttack.getPiece();
 		
 		if(pieceToAttack.getTeam().equals(this.team)) {
-			throw new InvalidMoveException("Can't attack members of the same team!");
+			throw new FriendlyFireException("Can't attack members of the same team!");
 		}
 
 		int damageDealt = randRange(attackRange[0], attackRange[1]);
 		
-		pieceToAttack.takeDamage(model, row, col, damageDealt);
+		pieceToAttack.takeDamage(tileToAttack, damageDealt);
 		
 		
 		hasAttackedOrDefended = true;
@@ -93,8 +95,9 @@ public abstract class Piece implements Serializable{
 	 * @param row is the row as an int of this piece's tile
 	 * @param col is the col as an int of this piece's tile
 	 * @param damage is the damage done (not counting if the piece defended).
+	 * @throws InvalidRemovalException 
 	 */
-	public void takeDamage(StrategyGameModel model, int row, int col, int damage) {
+	private void takeDamage(Tile thisTile, int damage) throws InvalidRemovalException {
 		int damageDefended = 0;
 		if(isDefended) {
 			damageDefended = randRange(defenseRange[0], defenseRange[1]);
@@ -106,7 +109,6 @@ public abstract class Piece implements Serializable{
 		health -= damageTaken;
 		
 		if(health < 0) { //Kill this piece if health < 0
-			Tile thisTile = model.getTile(row, col);
 			thisTile.removePiece(); //Point the tile to null, will get garbage collected
 		}
 	}
@@ -128,7 +130,7 @@ public abstract class Piece implements Serializable{
 	 * @throws OutOfMovesException, an unchecked exception if the programmer
 	 * did not check if the move distance was valid.
 	 */
-	public void move(int distance) {
+	public void move(int distance) throws OutOfMovesException {
 		if((moveDistanceRemaining - distance) < 0) {
 			throw new OutOfMovesException("This piece is out of moves! Make sure to handle this with an if statement.");
 		} else {
