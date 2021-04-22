@@ -31,8 +31,10 @@ public class TileAndPieceTests{
 	 * tests.
 	 * 
 	 * @return The 2D tile array for use by the other test methods.
+	 * @throws InvalidMoveException 
+	 * @throws InvalidRemovalException 
 	 */
-	private Tile[][] test_placePieces() {
+	private Tile[][] test_placePieces() throws InvalidMoveException, InvalidRemovalException {
 		Tile[][] testGrid = new Tile[5][5];
 		for(int i = 0; i<5; i++) {
 			for(int j = 0; j<5; j++) {
@@ -121,7 +123,7 @@ public class TileAndPieceTests{
 	 * This test does NOT show attack ranges, or ability to shoot through
 	 * characters and BlockedSeeThroughTiles. This is handled by the controller.
 	 */
-	public void testAttack() {
+	public void testAttack() throws InvalidMoveException, InvalidRemovalException, FriendlyFireException {
 		Tile[][] testGrid = test_placePieces(); 
 		
 		Piece humanKnight1 = testGrid[0][0].getPiece();
@@ -165,7 +167,7 @@ public class TileAndPieceTests{
 	 * Again, this does NOT test whether pieces are in range of one another.
 	 * This is done by the controller.
 	 */
-	public void testDefend() {
+	public void testDefend() throws InvalidMoveException, InvalidRemovalException, FriendlyFireException {
 		Tile[][] testGrid = test_placePieces(); 
 		
 		Piece humanKnight2 = testGrid[0][1].getPiece();
@@ -202,7 +204,7 @@ public class TileAndPieceTests{
 	 * an OutOfMovesException is thrown. This does NOT actually move the pieces
 	 * in the grid. This is handled by the controller.
 	 */
-	public void testMove() {
+	public void testMove() throws InvalidMoveException, InvalidRemovalException, OutOfMovesException {
 		Tile[][] testGrid = test_placePieces(); 
 		
 		Piece humanKnight2 = testGrid[0][1].getPiece();
@@ -236,7 +238,7 @@ public class TileAndPieceTests{
 	/**
 	 * Tests that Pieces have proper initial conditions.
 	 */
-	public void testInitialConditions() {
+	public void testInitialConditions() throws InvalidMoveException, InvalidRemovalException {
 		Tile[][] testGrid = test_placePieces();
 		Piece humanKnight1 = testGrid[0][0].getPiece();
 		

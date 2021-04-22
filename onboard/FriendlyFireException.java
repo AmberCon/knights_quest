@@ -1,6 +1,6 @@
 package onboard;
 
-public class FriendlyFireException extends RuntimeException {
+public class FriendlyFireException extends Exception {
 
 	public FriendlyFireException(String string) {
 	}

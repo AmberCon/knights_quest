@@ -10,7 +10,7 @@ package onboard;
  * @author Drake Sitarman
  *
  */
-public class InvalidRemovalException extends RuntimeException {
+public class InvalidRemovalException extends Exception {
 
 	public InvalidRemovalException(String string) {
 	}

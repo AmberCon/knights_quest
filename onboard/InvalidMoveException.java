@@ -10,7 +10,7 @@ package onboard;
  * @author Drake Sitaraman
  *
  */
-public class InvalidMoveException extends RuntimeException {
+public class InvalidMoveException extends Exception {
 
 	public InvalidMoveException(String string) {
 	}

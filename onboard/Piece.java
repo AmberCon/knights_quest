@@ -68,8 +68,9 @@ public abstract class Piece implements Serializable{
 	 * @param tileToAttack is the tile being attack. It should have a Piece on it.
 	 * @throws FriendlyFireException if the Piece attempts to attack a member of the same
 	 * team
+	 * @throws InvalidRemovalException 
 	 */
-	public void attack(Tile tileToAttack) throws FriendlyFireException {
+	public void attack(Tile tileToAttack) throws FriendlyFireException, InvalidRemovalException {
 		Piece pieceToAttack = tileToAttack.getPiece();
 		
 		if(pieceToAttack.getTeam().equals(this.team)) {
@@ -94,8 +95,9 @@ public abstract class Piece implements Serializable{
 	 * @param row is the row as an int of this piece's tile
 	 * @param col is the col as an int of this piece's tile
 	 * @param damage is the damage done (not counting if the piece defended).
+	 * @throws InvalidRemovalException 
 	 */
-	private void takeDamage(Tile thisTile, int damage) {
+	private void takeDamage(Tile thisTile, int damage) throws InvalidRemovalException {
 		int damageDefended = 0;
 		if(isDefended) {
 			damageDefended = randRange(defenseRange[0], defenseRange[1]);
@@ -128,7 +130,7 @@ public abstract class Piece implements Serializable{
 	 * @throws OutOfMovesException, an unchecked exception if the programmer
 	 * did not check if the move distance was valid.
 	 */
-	public void move(int distance) {
+	public void move(int distance) throws OutOfMovesException {
 		if((moveDistanceRemaining - distance) < 0) {
 			throw new OutOfMovesException("This piece is out of moves! Make sure to handle this with an if statement.");
 		} else {
