@@ -162,7 +162,7 @@ public class StrategyGameView extends Application {
 			level.setOnAction((event) -> {
 				startGame("levels/level_" + Integer.toString(levelNum) + ".dat");
 			});
-			levels.add(level, i % 4, Math.floorDiv(i, 4));
+			levels.add(level, i % 5, Math.floorDiv(i, 5));
 			ColumnConstraints levelColumn = new ColumnConstraints();
 			levelColumn.setPercentWidth(100 / 4);
 			levelColumn.setHalignment(HPos.CENTER);
