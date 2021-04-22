@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import model.BadSaveException;
 
 
 /**
@@ -331,7 +332,12 @@ public class StrategyGameView extends Application {
 		
 		gameWindow.setTop(topGUI);
 		
-		curGame = new StrategyGameLevelView(this, gameWindow, levelFileName);
+		try {
+			curGame = new StrategyGameLevelView(this, gameWindow, levelFileName);
+		} catch (BadSaveException e) {
+			badSaveWarning();
+			return;
+		}
 		int[] dimensions = curGame.getMapDimensions();
 		
 		Scene game = new Scene(gameWindow, dimensions[0]+50, dimensions[1]+50);
@@ -445,6 +451,21 @@ public class StrategyGameView extends Application {
         });
         
 		endGameAlert.showAndWait();
+	}
+	
+	public void badSaveWarning() {
+		stage.setScene(mainMenu);
+		Dialog<String> badSaveAlert = new Dialog<String>();
+		
+		badSaveAlert.setTitle("Invalid save file");
+		badSaveAlert.setHeaderText("Save file is not accessible");
+		badSaveAlert.setContentText("Save file does not exist, is corrupted, or is not\na Stategy Game save file.");
+		
+		ButtonType okButtonType = new ButtonType("Ok", ButtonData.OK_DONE);
+		
+		badSaveAlert.getDialogPane().getButtonTypes().addAll(okButtonType);
+        
+		badSaveAlert.showAndWait();
 	}
 	
 	

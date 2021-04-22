@@ -16,7 +16,17 @@ public class CreateLevel {
 
 	public static void main(String[] args) {
 		StrategyGameState level1 = new StrategyGameState();
-		Tile[][] map = {{new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile()},
+		
+		Tile[][] map1 = {{new OpenTile(),new OpenTile(),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new BlockedSeeThroughTile(),new OpenTile(),new BlockedSeeThroughTile(),new BlockedSeeThroughTile(),new BlockedSeeThroughTile(),new OpenTile(),new BlockedSeeThroughTile(),new BlockedSeeThroughTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
+		
+		Tile[][] map2 = {{new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile()},
 						{new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile()},
 						{new OpenTile(),new BlockedTile(),new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
 						{new BlockedTile(),new BlockedTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile()},
@@ -24,17 +34,18 @@ public class CreateLevel {
 						{new OpenTile(),new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
 						{new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
 						{new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
-		Team curTurn = Team.HUMAN;
-		String mapIMG = "assets/level_2_background.png";
 		
-		level1.board = map;
+		Team curTurn = Team.HUMAN;
+		String mapIMG = "assets/level_1_background.png";
+		
+		level1.board = map1;
 		level1.currentTurn = curTurn;
 		level1.backgroundImageFileName = mapIMG;
 		
-		File newFile = new File("levels/level_2.dat");
+		File newFile = new File("levels/level_1.dat");
 		try {
 			newFile.createNewFile();
-			FileOutputStream saveToFile = new FileOutputStream("levels/level_2.dat");
+			FileOutputStream saveToFile = new FileOutputStream("levels/level_1.dat");
 		    ObjectOutputStream outputStream = new ObjectOutputStream(saveToFile);
 			outputStream.writeObject(level1);
 			outputStream.close();

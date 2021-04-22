@@ -36,6 +36,10 @@ import javafx.scene.text.Text;
 import model.BadSaveException;
 import model.StrategyGameModel;
 import model.Team;
+import onboard.FriendlyFireException;
+import onboard.InvalidMoveException;
+import onboard.InvalidRemovalException;
+import onboard.OutOfMovesException;
 
 
 /**
@@ -68,8 +72,9 @@ public class StrategyGameLevelView implements Observer {
 	 * @param mainView (StrategyGameView) : should be the main view object.
 	 * @param gameWindow (BorderPane) : an already constructed gameWindow with the top GUI already constructed
 	 * @param levelFileName (String) : a string representing the name of the level/save file to be constructed.
+	 * @throws BadSaveException 
 	 */
-	public StrategyGameLevelView(StrategyGameView mainView, BorderPane gameWindow, String levelFileName) {
+	public StrategyGameLevelView(StrategyGameView mainView, BorderPane gameWindow, String levelFileName) throws BadSaveException {
 		
 		this.mainView = mainView;
 		this.gameWindow = gameWindow;
@@ -78,9 +83,7 @@ public class StrategyGameLevelView implements Observer {
 		saveUpToDate = true;
 			
 		// Set up model and controller
-		try {
-			model = new StrategyGameModel(levelFileName);
-		} catch (BadSaveException e) {} // TODO: ADD ERROR HANDLING
+		model = new StrategyGameModel(levelFileName);
 		model.addObserver(this);
 		controller = new StrategyGameController(model);
 				
@@ -280,7 +283,13 @@ public class StrategyGameLevelView implements Observer {
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
 				        public void handle(MouseEvent e) { 
-				        	controller.attack(row, col, againstRow, againstCol); //  TODO: ADD ERROR HANDLING
+				        	try {
+								controller.attack(row, col, againstRow, againstCol);
+							} catch (FriendlyFireException e1) {
+								displayMessage("This is your teammate! You cannot attack them!");
+							} catch (InvalidRemovalException e1) {
+								displayMessage("Invalid attack");
+							}
 				        } 
 				    };  
 				    
@@ -342,7 +351,15 @@ public class StrategyGameLevelView implements Observer {
 					EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
 				        @Override 
 				        public void handle(MouseEvent e) { 
-				        	controller.move(row, col, toRow, toCol); // TODO: ADD ERROR HANDLING
+				        	try {
+								controller.move(row, col, toRow, toCol);
+							} catch (InvalidRemovalException e1) {
+								displayMessage("You cannot move here.");
+							} catch (InvalidMoveException e1) {
+								displayMessage("You cannot move here.");
+							} catch (OutOfMovesException e1) {
+								displayMessage("This piece is out of moves.");
+							}
 				        } 
 				    };  
 				    
