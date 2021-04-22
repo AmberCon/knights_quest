@@ -159,7 +159,7 @@ public class StrategyGameView extends Application {
 			level.setPrefSize(100, 75);
 			level.setStyle("-fx-font-size:20");
 			level.setOnAction((event) -> {
-				startGame("levels/level_" + Integer.toString(levelNum) + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
+				startGame("levels/level_" + Integer.toString(levelNum) + ".dat");
 			});
 			levels.add(level, i % 4, Math.floorDiv(i, 4));
 			ColumnConstraints levelColumn = new ColumnConstraints();
@@ -232,7 +232,7 @@ public class StrategyGameView extends Application {
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
 			save.setOnAction((event) -> {
-				startGame("saves/" + saveName + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
+				startGame("saves/" + saveName + ".dat");
 			});
 			saves.getChildren().add(save);
 		}
@@ -250,7 +250,7 @@ public class StrategyGameView extends Application {
 			Optional<String> fileName = deleteSaveDialog.showAndWait();
 			
 			fileName.ifPresent(file -> {
-				File saveFile = new File("saves/" + file + ".dat"); // TODO: EDIT WITH AGREED UPON FORMAT
+				File saveFile = new File("saves/" + file + ".dat");
 				saveFile.delete();
 			});
 			resumeGame();
@@ -351,7 +351,7 @@ public class StrategyGameView extends Application {
 		
 		Optional<String> fileName = saveGame.showAndWait();
 		
-		fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file + ".dat")); // TODO: EDIT WITH AGREED UPON FORMAT
+		fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file + ".dat"));
 		curGame.setSaveUpToDate();
 	}
 	
@@ -491,7 +491,7 @@ public class StrategyGameView extends Application {
 	}
 	
 	/**
-	 * returns a list of all levels that are allowed to be played
+	 * Returns a list of all levels that are allowed to be played
 	 * 
 	 * @return List<Integer>: a list of all levels unlocked
 	 */
@@ -502,7 +502,6 @@ public class StrategyGameView extends Application {
 		try {
 			completedLevelScanner = new Scanner(completedLevelFile);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String[] completedLevels = completedLevelScanner.next().strip().split(",");
