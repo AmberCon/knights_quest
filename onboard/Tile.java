@@ -16,6 +16,7 @@ import java.io.Serializable;
 public abstract class Tile implements Serializable{
 	
 	protected Piece piece; //Piece who is standing on the tile
+	public final static String imgPath="";
 	
 	/**
 	 * @return The Piece object at the tile or null if one does not exist.
