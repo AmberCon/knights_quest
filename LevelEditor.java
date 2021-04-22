@@ -1,5 +1,9 @@
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import model.LevelEditorModel;
@@ -15,6 +19,7 @@ public class LevelEditor {
 
 	private Scene scene;
 	private LevelEditorModel model;
+	private BorderPane root;
 	
 	/**
 	 * Creates a new LevelEditor on the given scene
@@ -23,6 +28,8 @@ public class LevelEditor {
 	public LevelEditor(Scene scene) {
 		this.scene = scene;
 		model = new LevelEditorModel();
+		root = new BorderPane();
+		scene.setRoot(root);
 	}
 	
 	public void useLevelEditor() { //should return once user is finished and backs out of menu
@@ -57,6 +64,32 @@ public class LevelEditor {
 				}
 			}
 		}
-		//TODO what to do with the grid pane
+		root.setCenter(map);
+	}
+	
+	/**
+	 * Initializes the menu to the top of root
+	 */
+	private void initMenu() {
+		Menu menu = new Menu("Menu");
+		
+		//Save level button
+		MenuItem saveLevel = new MenuItem("Save Level");
+		saveLevel.setOnAction((event)->{}); //TODO
+		menu.getItems().add(saveLevel);
+		
+		//Return to main menu button
+		MenuItem returnToMainMenu = new MenuItem("Return to Main Menu");
+		returnToMainMenu.setOnAction((event)->{});//TODO
+		menu.getItems().add(returnToMainMenu);
+		
+		root.setTop(new MenuBar(menu));
+	}
+	
+	/**
+	 * Initializes the tiles bar to the right of the screen
+	 */
+	private void initTilesBar() {
+		//TODO Encapsulate with scrollpane if we get that many tiles
 	}
 }

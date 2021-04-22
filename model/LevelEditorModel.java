@@ -15,6 +15,7 @@ import onboard.Tile;
 public class LevelEditorModel {
 	private StrategyGameState level;
 	public static final int SIZE = 8;
+	public Team selectedTeam;
 	
 	/**
 	 * No argument constructor for LevelEditorModel
@@ -60,6 +61,18 @@ public class LevelEditorModel {
 			objOut.writeObject(level);
 		} catch (IOException e) {
 			throw new SaveFailureException();
+		}
+	}
+	
+	/**
+	 * Toggles the selected team field to whatever value it currently
+	 * isn't
+	 */
+	public void toggleSelectedTeam() {
+		if(selectedTeam.equals(Team.HUMAN)) {
+			selectedTeam = Team.COMPUTER;
+		} else {
+			selectedTeam = Team.HUMAN;
 		}
 	}
 }
