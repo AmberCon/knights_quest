@@ -10,7 +10,7 @@ package onboard;
  */
 public class BlockedSeeThroughTile extends Tile{
 
-	public final static String imgPath="assets/BlockedSeeThroughTile.png";
+	public final String imgPath="assets/BlockedSeeThroughTile.png";
 	
 	@Override
 	/**

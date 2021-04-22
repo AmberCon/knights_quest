@@ -11,7 +11,7 @@ package onboard;
  */
 public class OpenTile extends Tile{
 	
-	public final static String imgPath="assets/OpenTile.png";
+	public final String imgPath="assets/OpenTile.png";
 	
 	/**
 	 * Default constructor, assumes there is no piece on it.

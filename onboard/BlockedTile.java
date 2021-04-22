@@ -11,7 +11,7 @@ package onboard;
  */
 public class BlockedTile extends Tile{
 	
-	public final static String imgPath="assets/BlockedTile.png";
+	public final String imgPath="assets/BlockedTile.png";
 	
 	@Override
 	/**
