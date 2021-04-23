@@ -16,7 +16,7 @@ import java.io.Serializable;
 public abstract class Tile implements Serializable{
 	
 	protected Piece piece; //Piece who is standing on the tile
-	public final String imgPath="";
+	protected String imgPath;
 	
 	/**
 	 * @return The Piece object at the tile or null if one does not exist.
@@ -79,5 +79,13 @@ public abstract class Tile implements Serializable{
 	 * @return false if a BlockedSeeThroughTile. true otherwise.
 	 */
 	public abstract boolean canShootThrough();
+	
+	/**
+	 * Returns the filepath of the image for this tile
+	 * @return the filepath of the image for this tile, as a String
+	 */
+	public String getImgPath() {
+		return this.imgPath;
+	}
 
 }

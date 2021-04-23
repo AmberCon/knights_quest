@@ -11,7 +11,13 @@ package onboard;
  */
 public class BlockedTile extends Tile{
 	
-	public final String imgPath="assets/BlockedTile.png";
+	/**
+	 * No arg constructor for Blocked Tile
+	 */
+	public BlockedTile() {
+		super();
+		imgPath = "assets/BlockedTile.png";
+	}
 	
 	@Override
 	/**

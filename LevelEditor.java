@@ -5,8 +5,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import model.LevelEditorModel;
+import onboard.Archer;
+import onboard.BlockedSeeThroughTile;
+import onboard.BlockedTile;
+import onboard.Knight;
+import onboard.OpenTile;
+import onboard.Piece;
 import onboard.Tile;
 
 /**
@@ -22,6 +29,15 @@ public class LevelEditor {
 	private LevelEditorModel model;
 	private BorderPane root;
 	
+	private static final Tile[] TILE_SAMPLES = new Tile[] {
+		new OpenTile(), new BlockedTile(), new BlockedSeeThroughTile()
+	};
+	@SuppressWarnings("unchecked") //TODO fi this
+	private static final Class<? extends Piece>[] PIECE_CLASSES = new Class[] {
+		Knight.class, Archer.class
+	};
+	private static final String NULL_TILE_IMG_PATH = "assets/NullTile.png";
+	
 	/**
 	 * Creates a new LevelEditor on the given scene
 	 * @param scene - the scene to display the level editor on
@@ -33,11 +49,8 @@ public class LevelEditor {
 		this.scene = new Scene(root);
 		initMenu();
 		update();
+		initTilesBar();
 		mainView.stage.setScene(scene);
-	}
-	
-	public void useLevelEditor() { //should return once user is finished and backs out of menu
-		
 	}
 	
 	/**
@@ -56,11 +69,11 @@ public class LevelEditor {
 				
 				//Add tile image
 				if(tile == null) {
-					sp.getChildren().add(new ImageView("assets/NullTile.png"));
+					sp.getChildren().add(new ImageView(NULL_TILE_IMG_PATH));
 					map.add(sp, col, row);
 					continue;
 				}
-				ImageView tileImg = new ImageView(tile.imgPath);
+				ImageView tileImg = new ImageView(tile.getImgPath());
 				sp.getChildren().add(tileImg);
 				
 				//add piece image
@@ -99,5 +112,13 @@ public class LevelEditor {
 	 */
 	private void initTilesBar() {
 		//TODO Encapsulate with scrollpane if we get that many tiles
+		HBox tilesBar = new HBox();
+		
+		tilesBar.getChildren().add(new ImageView(NULL_TILE_IMG_PATH));
+		for(Tile t:TILE_SAMPLES) {
+			tilesBar.getChildren().add(new ImageView(t.getImgPath()));
+		}
+		
+		root.setBottom(tilesBar);
 	}
 }
