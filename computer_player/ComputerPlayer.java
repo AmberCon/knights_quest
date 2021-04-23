@@ -43,6 +43,7 @@ public class ComputerPlayer{
 	
 	
 	private void getPieces() {
+		pieces = new ArrayList<Piece>();
 		for(int row = 0; row<boardHeight; row++) {
 			for(int col = 0; col<boardWidth; col++) {
 				Tile tile = model.getTile(row, col);
@@ -81,6 +82,7 @@ public class ComputerPlayer{
 
 
 	public Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
+		
 		Queue<Coordinate> q = new LinkedList<Coordinate>();
 		HashSet<Coordinate> coordinatesVisited = new HashSet<Coordinate>();
 		
@@ -91,10 +93,12 @@ public class ComputerPlayer{
 		q.add(new Coordinate(fromRow, fromCol));
 		
 		while(!q.isEmpty()) {
+			
 			Coordinate c = q.remove();
 			coordinatesVisited.add(c);
 			
 			for(int i = 0; i<8; i++) {
+				
 				Coordinate adjacent = getCoordinate(fromRow, fromCol, i);
 				Tile tile = coordToTile(adjacent.row, adjacent.col);
 				
@@ -109,9 +113,14 @@ public class ComputerPlayer{
 				
 				
 				Piece onAdjacent = tile.getPiece();
-				
+				if(onAdjacent !=null) {
+				System.out.println(onAdjacent.getTeam());
+				} else {
+					System.out.println("null");
+				}
 				//Human found, start executing path.
 				if(onAdjacent != null && onAdjacent.getTeam().equals(Team.HUMAN)) {
+					
 					shortestPath = getPath(pathTo, adjacent.row, adjacent.col);
 					break;
 				}
@@ -131,6 +140,7 @@ public class ComputerPlayer{
 		
 		while(currCoord != null) {
 			shortestPath.push(currCoord);
+			System.out.println("(" + currCoord.row + ", " + currCoord.col + ")");
 			currCoord = pathTo[currCoord.row][currCoord.col];
 		}
 		

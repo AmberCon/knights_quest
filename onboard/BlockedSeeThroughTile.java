@@ -10,6 +10,11 @@ package onboard;
  */
 public class BlockedSeeThroughTile extends Tile{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	/**
 	 * @return false
