@@ -6,6 +6,6 @@ package model;
  * @author Ember Chan
  *
  */
-public class InvalidLevelException {
+public class InvalidLevelException extends Exception {
 
 }

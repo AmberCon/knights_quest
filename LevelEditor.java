@@ -23,6 +23,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import model.InvalidLevelException;
 import model.LevelEditorModel;
 import model.SaveFailureException;
 import model.Team;
@@ -250,6 +251,13 @@ public class LevelEditor {
 		} catch (SaveFailureException e) {
 			Alert a = new Alert(AlertType.ERROR);
 			a.setContentText("Error While Saving Level");
+			a.showAndWait();
+		} catch (InvalidLevelException e) {
+			Alert a = new Alert(AlertType.ERROR);
+			a.setContentText("Error: Invalid level\n"
+					+ "Make sure you gave it a name.\n"
+					+ "Make sure there are no empty tiles.\n"
+					+ "Make sure there is at least one piece for each player.");
 			a.showAndWait();
 		}
 		

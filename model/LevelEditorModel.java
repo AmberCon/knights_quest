@@ -55,17 +55,18 @@ public class LevelEditorModel {
 	 * Saves the current level to the levels folder with the given name
 	 * @param levelName - the name of level to put into the levels folder
 	 * @throws SaveFailureException if there was an issue saving the level
+	 * @throws InvalidLevelException if the the level isn't playable or a bad filename was given
 	 */
-	public void saveLevel(String levelName) throws SaveFailureException {
+	public void saveLevel(String levelName) throws SaveFailureException, InvalidLevelException {
 		if(levelName == "") {
-			throw new SaveFailureException();
+			throw new InvalidLevelException();
 		}
 		int humanPieces = 0;
 		int computerPieces = 0;
 		for(int i = 0; i<SIZE; i++) {
 			for (int j = 0; j<SIZE; j++) {
 				if(level.board[i][j] == null) {
-					throw new SaveFailureException();
+					throw new InvalidLevelException();
 				}
 				Piece p = level.board[i][j].getPiece();
 				if(p!= null) {
@@ -78,7 +79,7 @@ public class LevelEditorModel {
 			}
 		}
 		if(humanPieces == 0 || computerPieces == 0) {
-			throw new SaveFailureException();
+			throw new InvalidLevelException();
 		}
 		
 		try (ObjectOutputStream objOut =
