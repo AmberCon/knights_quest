@@ -11,6 +11,10 @@ import java.util.Stack;
 import controller.StrategyGameController;
 import model.StrategyGameModel;
 import model.Team;
+import onboard.FriendlyFireException;
+import onboard.InvalidMoveException;
+import onboard.InvalidRemovalException;
+import onboard.OutOfMovesException;
 import onboard.Piece;
 import onboard.Tile;
 
@@ -79,6 +83,35 @@ public class ComputerPlayer{
 		
 		return model.getTile(row, col);
 	}
+	
+	public void moveTowardHumanPiece(Piece piece, int compPieceRow, int compPieceCol) {
+		Stack<Coordinate> shortestPath = shortestPath(compPieceRow, compPieceCol);
+		int moveDistance = piece.getMoveDistanceRemaining();
+		
+		while(shortestPath.size() > 1 && moveDistance > 0) {
+			Coordinate nextMove = shortestPath.pop();
+			Tile toMove = coordToTile(nextMove.row, nextMove.col);
+			try {
+				toMove.setPiece(piece);
+				piece.move(1);
+				
+			//OutOfMoves will never happen, but InvalidMove could happen
+			//If there is a piece blocking.
+			} catch (InvalidMoveException | OutOfMovesException e) {
+				break;
+			} 
+		}
+		
+		Coordinate potentialAttack = shortestPath.pop();
+		Tile pAttackTile = coordToTile(potentialAttack.row, potentialAttack.col);
+		
+		try {
+			piece.attack(pAttackTile);
+		} catch (FriendlyFireException | InvalidRemovalException e) {
+			piece.defend();
+
+		}
+	}
 
 
 	public Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
@@ -87,25 +120,30 @@ public class ComputerPlayer{
 		HashSet<Coordinate> coordinatesVisited = new HashSet<Coordinate>();
 		
 		
-		Stack<Coordinate> shortestPath = new Stack<Coordinate>();
 		Coordinate[][] pathTo = new Coordinate[boardHeight][boardWidth];
 		
-		q.add(new Coordinate(fromRow, fromCol));
+		Coordinate start = new Coordinate(fromRow, fromCol);
+
+		q.add(start);
+		coordinatesVisited.add(start);
+		
 		
 		while(!q.isEmpty()) {
-			
 			Coordinate c = q.remove();
 			coordinatesVisited.add(c);
 			
 			for(int i = 0; i<8; i++) {
 				
-				Coordinate adjacent = getCoordinate(fromRow, fromCol, i);
+				Coordinate adjacent = getCoordinate(c.row, c.col, i);
+				
+				
 				Tile tile = coordToTile(adjacent.row, adjacent.col);
 				
-				//If out of bounds or already visited OR if you can't move into a tile.
-				if(tile == null || !tile.canMoveInto() || coordinatesVisited.contains(adjacent)) {
+				//If out of bounds or already visited 
+				if(tile == null  || !(tile.isOpenTile())|| coordinatesVisited.contains(adjacent)) {
 					continue;
 				} 
+				
 				
 				q.add(adjacent);
 				coordinatesVisited.add(adjacent);
@@ -113,34 +151,31 @@ public class ComputerPlayer{
 				
 				
 				Piece onAdjacent = tile.getPiece();
-				if(onAdjacent !=null) {
-				System.out.println(onAdjacent.getTeam());
-				} else {
-					System.out.println("null");
-				}
+				
+
 				//Human found, start executing path.
 				if(onAdjacent != null && onAdjacent.getTeam().equals(Team.HUMAN)) {
-					
-					shortestPath = getPath(pathTo, adjacent.row, adjacent.col);
-					break;
+					return getPath(pathTo, adjacent);
 				}
 								
 			}
 			
 		}
 		
-		return shortestPath;
+		return null; //No human on board, but if that were the case, this method would not have been called.
 		
 	}
 	
-	private Stack<Coordinate> getPath(Coordinate[][] pathTo, int finalRow, int finalCol){
+	private Stack<Coordinate> getPath(Coordinate[][] pathTo, Coordinate finalCoord){
 		Stack<Coordinate> shortestPath = new Stack<Coordinate>();
 		
-		Coordinate currCoord = pathTo[finalRow][finalCol];
+		System.out.println(finalCoord);
+		shortestPath.push(finalCoord);
+		Coordinate currCoord = pathTo[finalCoord.row][finalCoord.col];
 		
 		while(currCoord != null) {
 			shortestPath.push(currCoord);
-			System.out.println("(" + currCoord.row + ", " + currCoord.col + ")");
+			System.out.println(currCoord);
 			currCoord = pathTo[currCoord.row][currCoord.col];
 		}
 		
@@ -171,6 +206,10 @@ public class ComputerPlayer{
 		
 		public int hashCode() {
 			return (row+col)/2;
+		}
+		
+		public String toString() {
+			return "(" + row + ", " + col + ")";
 		}
 	}
 }
