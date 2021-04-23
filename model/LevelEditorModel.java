@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import onboard.Piece;
 import onboard.Tile;
 
 /**
@@ -56,23 +57,37 @@ public class LevelEditorModel {
 	 * @throws SaveFailureException if there was an issue saving the level
 	 */
 	public void saveLevel(String levelName) throws SaveFailureException {
+		if(levelName == "") {
+			throw new SaveFailureException();
+		}
+		int humanPieces = 0;
+		int computerPieces = 0;
+		for(int i = 0; i<SIZE; i++) {
+			for (int j = 0; j<SIZE; j++) {
+				if(level.board[i][j] == null) {
+					throw new SaveFailureException();
+				}
+				Piece p = level.board[i][j].getPiece();
+				if(p!= null) {
+					if(p.getTeam().equals(Team.HUMAN)) {
+						humanPieces++;
+					} else {
+						computerPieces++;
+					}
+				}
+			}
+		}
+		if(humanPieces == 0 || computerPieces == 0) {
+			throw new SaveFailureException();
+		}
+		
 		try (ObjectOutputStream objOut =
-				new ObjectOutputStream(new FileOutputStream(levelName+".dat"))){
+				new ObjectOutputStream(new FileOutputStream("levels/"+levelName+".dat"))){
 			objOut.writeObject(level);
 		} catch (IOException e) {
 			throw new SaveFailureException();
 		}
 	}
 	
-	/**
-	 * Toggles the selected team field to whatever value it currently
-	 * isn't
-	 */
-	public void toggleSelectedTeam() {
-		if(selectedTeam.equals(Team.HUMAN)) {
-			selectedTeam = Team.COMPUTER;
-		} else {
-			selectedTeam = Team.HUMAN;
-		}
-	}
+	
 }

@@ -1,18 +1,36 @@
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
+
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import model.LevelEditorModel;
+import model.SaveFailureException;
 import model.Team;
 import onboard.Archer;
 import onboard.BlockedSeeThroughTile;
 import onboard.BlockedTile;
+import onboard.InvalidMoveException;
+import onboard.InvalidRemovalException;
 import onboard.Knight;
 import onboard.OpenTile;
 import onboard.Piece;
@@ -30,6 +48,7 @@ public class LevelEditor {
 	private Scene scene;
 	private LevelEditorModel model;
 	private BorderPane root;
+	private Set<StackPane> selectables;
 	
 	private static int TILE_SIZE = 64;
 	private static final Tile[] TILE_SAMPLES = new Tile[] {
@@ -46,6 +65,8 @@ public class LevelEditor {
 	 * @param scene - the scene to display the level editor on
 	 */
 	public LevelEditor(StrategyGameView mainView) {
+		selectables = new HashSet<StackPane>();
+		
 		this.mainView = mainView;
 		model = new LevelEditorModel();
 		root = new BorderPane();
@@ -64,7 +85,6 @@ public class LevelEditor {
 		//Map is represented by a GridPane of StackPanes
 		//Each stackpane has space for a tile image and a piece image
 		
-		//TODO Seperators between tiles?
 		GridPane map = new GridPane();
 		for (int row = 0; row < LevelEditorModel.SIZE; row++) {
 			for(int col = 0; col < LevelEditorModel.SIZE; col++) {
@@ -74,6 +94,7 @@ public class LevelEditor {
 				//Add tile image
 				if(tile == null) {
 					sp.getChildren().add(new ImageView(NULL_TILE_IMG_PATH));
+					makeModifiable(sp, row, col);
 					map.add(sp, col, row);
 					continue;
 				}
@@ -83,9 +104,12 @@ public class LevelEditor {
 				//add piece image
 				if(tile.getPiece()!= null) {
 					ImageView pieceImg = new ImageView(tile.getPiece().getSpriteFileName());
+					pieceImg.setFitWidth(TILE_SIZE);
+					pieceImg.setFitHeight(TILE_SIZE);
 					sp.getChildren().add(pieceImg);
 				}
 				
+				makeModifiable(sp, row, col);
 				map.add(sp, col, row);
 			}
 		}
@@ -102,7 +126,7 @@ public class LevelEditor {
 		
 		//Save level button
 		MenuItem saveLevel = new MenuItem("Save Level");
-		saveLevel.setOnAction((event)->{}); //TODO
+		saveLevel.setOnAction((event)->{saveGame();});
 		menu.getItems().add(saveLevel);
 		
 		//Return to main menu button
@@ -120,9 +144,17 @@ public class LevelEditor {
 		//TODO Encapsulate with scrollpane if we get that many tiles
 		HBox tilesBar = new HBox();
 		
-		tilesBar.getChildren().add(new ImageView(NULL_TILE_IMG_PATH));
+		
+		StackPane eraser = new StackPane(new ImageView(NULL_TILE_IMG_PATH));
+		makeSpSelectable(eraser, null);
+		tilesBar.getChildren().add(eraser); 
+
 		for(Tile t:TILE_SAMPLES) {
-			tilesBar.getChildren().add(new ImageView(t.getImgPath()));
+			ImageView tileImg = new ImageView(t.getImgPath());
+			StackPane sp = new StackPane();
+			sp.getChildren().add(tileImg);
+			makeSpSelectable(sp, t);
+			tilesBar.getChildren().add(sp);
 		}
 		
 		root.setBottom(tilesBar);
@@ -135,14 +167,91 @@ public class LevelEditor {
 		//TODO Encapsulate with scrollpane if we get that many pieces
 		VBox piecesBar = new VBox();
 		
-		piecesBar.getChildren().add(new ImageView(NULL_TILE_IMG_PATH)); //TODO no piece icon?
+		
 		for(Piece p:PIECE_SAMPLES) {
 			ImageView pieceImg = new ImageView(p.getSpriteFileName());
 			pieceImg.setFitWidth(TILE_SIZE);
 			pieceImg.setFitHeight(TILE_SIZE);
-			piecesBar.getChildren().add(pieceImg);
+			StackPane sp = new StackPane();
+			sp.getChildren().add(pieceImg);
+			makeSpSelectable(sp, p);
+			piecesBar.getChildren().add(sp);
 		}
 		
 		root.setLeft(piecesBar);
+	}
+	
+	/**
+	 * Makes the given StackPane selectable by the user
+	 * @param sp the StackPane to be made selectable
+	 * @param selection what should be selected when the user clicks the StackPane, as 
+	 * an object. Will update model.selection to this object when clicked
+	 */
+	private void makeSpSelectable(StackPane sp, Object selection) {
+		sp.setPadding(new Insets(5, 5, 5, 5));
+		sp.setOnMouseClicked((event)->{
+			for(StackPane o : selectables) {
+				o.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+			}
+			sp.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+			model.selection = selection;
+		});
+		selectables.add(sp);
+	}
+	
+
+	
+	@SuppressWarnings({ "rawtypes", "deprecation" })
+	private void makeModifiable(StackPane sp, int row, int col) {
+		sp.setOnMouseClicked((event)->{
+			try {
+				if(model.selection == null) {
+					model.setTile(row, col, null);
+				} else if (model.selection instanceof Tile) {
+
+					model.setTile(row, col, (Tile) model.selection.getClass().newInstance());
+
+				} else if(model.getTile(row, col) instanceof OpenTile) {
+					Piece samplePiece = (Piece) model.selection;
+					Constructor[] ctors = samplePiece.getClass().getDeclaredConstructors();
+					Constructor ctor = null;
+					for (int i = 0; i<ctors.length; i++) {
+						if (ctors[i].getParameterCount() == 1) {
+							ctor = ctors[i];
+						}
+					}
+					Piece newPiece = (Piece) ctor.newInstance(samplePiece.getTeam());
+					newPiece.setTeam(samplePiece.getTeam());
+					if(model.getTile(row, col).getPiece()!=null) {
+						model.getTile(row, col).removePiece();
+					}
+					model.getTile(row, col).setPiece(newPiece);
+				}
+			} catch (InstantiationException | IllegalAccessException | InvalidMoveException | IllegalArgumentException | InvocationTargetException | InvalidRemovalException e) {
+				Alert a = new Alert(AlertType.ERROR);
+				a.setContentText("Fatal Error; Returning to main menu");
+				a.showAndWait();
+				mainView.returnToMainMenu();
+			}
+			
+			update();
+		});
+	}
+	
+	/**
+	 * Prompts the user for the name of their custom level and 
+	 * saves the game
+	 */
+	private void saveGame() {
+		TextInputDialog saveInput = new TextInputDialog("name your level");
+		saveInput.showAndWait();
+		try {
+			model.saveLevel(saveInput.getEditor().getText());
+		} catch (SaveFailureException e) {
+			Alert a = new Alert(AlertType.ERROR);
+			a.setContentText("Error While Saving Level");
+			a.showAndWait();
+		}
+		
 	}
 }
