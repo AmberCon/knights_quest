@@ -57,6 +57,7 @@ public class LevelEditor {
 				//Add tile image
 				if(tile == null) {
 					sp.getChildren().add(new ImageView("assets/NullTile.png"));
+					map.add(sp, col, row);
 					continue;
 				}
 				ImageView tileImg = new ImageView(tile.imgPath);
@@ -67,6 +68,8 @@ public class LevelEditor {
 					ImageView pieceImg = new ImageView(tile.getPiece().getSpriteFileName());
 					sp.getChildren().add(pieceImg);
 				}
+				
+				map.add(sp, col, row);
 			}
 		}
 		root.setCenter(map);
