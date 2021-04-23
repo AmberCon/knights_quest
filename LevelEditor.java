@@ -17,6 +17,7 @@ import onboard.Tile;
  */
 public class LevelEditor {
 
+	private StrategyGameView mainView;
 	private Scene scene;
 	private LevelEditorModel model;
 	private BorderPane root;
@@ -25,11 +26,14 @@ public class LevelEditor {
 	 * Creates a new LevelEditor on the given scene
 	 * @param scene - the scene to display the level editor on
 	 */
-	public LevelEditor(Scene scene) {
-		this.scene = scene;
+	public LevelEditor(StrategyGameView mainView) {
+		this.mainView = mainView;
 		model = new LevelEditorModel();
 		root = new BorderPane();
-		scene.setRoot(root);
+		this.scene = new Scene(root);
+		initMenu();
+		update();
+		mainView.stage.setScene(scene);
 	}
 	
 	public void useLevelEditor() { //should return once user is finished and backs out of menu
@@ -43,6 +47,7 @@ public class LevelEditor {
 		//Map is represented by a GridPane of StackPanes
 		//Each stackpane has space for a tile image and a piece image
 		
+		//TODO Seperators between tiles?
 		GridPane map = new GridPane();
 		for (int row = 0; row < LevelEditorModel.SIZE; row++) {
 			for(int col = 0; col < LevelEditorModel.SIZE; col++) {
@@ -80,7 +85,7 @@ public class LevelEditor {
 		
 		//Return to main menu button
 		MenuItem returnToMainMenu = new MenuItem("Return to Main Menu");
-		returnToMainMenu.setOnAction((event)->{});//TODO
+		returnToMainMenu.setOnAction((event)->{mainView.returnToMainMenu();});
 		menu.getItems().add(returnToMainMenu);
 		
 		root.setTop(new MenuBar(menu));

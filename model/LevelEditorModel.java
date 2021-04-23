@@ -16,6 +16,7 @@ public class LevelEditorModel {
 	private StrategyGameState level;
 	public static final int SIZE = 8;
 	public Team selectedTeam;
+	public Object selection;
 	
 	/**
 	 * No argument constructor for LevelEditorModel
