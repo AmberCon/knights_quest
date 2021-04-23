@@ -48,9 +48,7 @@ public class Archer extends Piece{
 	 */
 	public void resetTurn() {
 		moveDistanceRemaining = 3;
-		isDefended = false;
 		hasAttackedOrDefended = false;
-		
 	}
 	
 }

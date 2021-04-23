@@ -49,9 +49,7 @@ public class Knight extends Piece{
 	 */
 	public void resetTurn() {
 		moveDistanceRemaining = 1;
-		isDefended = false;
 		hasAttackedOrDefended = false;
-		
 	}
 
 	

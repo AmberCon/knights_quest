@@ -162,13 +162,15 @@ public class StrategyGameController{
 	 * @throws FriendlyFireException 
 	 */
 	public void attack(int byRow, int byCol, int againstRow, int againstCol) throws FriendlyFireException, InvalidRemovalException {
-		List<int[]> possible = getValidAttacks(byRow, byCol);
-		int[] against = {againstRow, againstCol};
-		if(isInList(possible, against)) {
-			Piece by = model.getTile(byRow, byCol).getPiece();
-			Tile againstTile = model.getTile(againstRow, againstCol);
-			by.attack(againstTile);
-			model.setUpNotifyObservers();
+		if (!model.getTile(byRow, byCol).getPiece().hasAttackedOrDefended()) {
+			List<int[]> possible = getValidAttacks(byRow, byCol);
+			int[] against = {againstRow, againstCol};
+			if(isInList(possible, against)) {
+				Piece by = model.getTile(byRow, byCol).getPiece();
+				Tile againstTile = model.getTile(againstRow, againstCol);
+				by.attack(againstTile);
+				model.setUpNotifyObservers();
+			}
 		}
 	}
 	
@@ -234,11 +236,11 @@ public class StrategyGameController{
 		int width = getBoardWidth();
 		int length = getBoardLength();
 		if((curRow >= 0) && (curRow < length) && (curCol >= 0) && (curCol < width)) {
-			if(distanceRemaining > curDistance) {
-				int[] curCoord = {curRow, curCol};
-				if(Arrays.equals(curCoord, destination)) {
-					distances.add(curDistance);
-				}
+			int[] curCoord = {curRow, curCol};
+			if(Arrays.equals(curCoord, destination)) {
+				distances.add(curDistance);
+			}
+			if (distanceRemaining > curDistance) {
 				findShortestMoveHelper(curRow + 1, curCol, destination, curDistance + 1, distanceRemaining, distances);
 				findShortestMoveHelper(curRow + 1, curCol + 1, destination, curDistance + 1, distanceRemaining, distances);
 				findShortestMoveHelper(curRow + 1, curCol - 1, destination, curDistance + 1, distanceRemaining, distances);
@@ -258,7 +260,7 @@ public class StrategyGameController{
 	 * @param col The x axis coordinate of the piece
 	 */
 	public void defend(int row, int col) {
-		if(hasPlayer(row, col)) {
+		if(hasPlayer(row, col) && !model.getTile(row, col).getPiece().hasAttackedOrDefended()) {
 			Tile tile = model.getTile(row, col);
 			Piece piece = tile.getPiece();
 			piece.defend();
@@ -282,12 +284,13 @@ public class StrategyGameController{
 	 */
 	public List<int[]> getValidAttacks(int row, int col){
 		List<int[]> possible = new ArrayList<int[]>();
-		Piece piece = model.getTile(row, col).getPiece();
-		int range = piece.getAttackDistance();
-		Team team = piece.getTeam();
-		
-		getValidAttacksHelper(row, col, range, team, possible);
-		
+		if (!model.getTile(row, col).getPiece().hasAttackedOrDefended()) {
+			Piece piece = model.getTile(row, col).getPiece();
+			int range = piece.getAttackDistance();
+			Team team = piece.getTeam();
+			
+			getValidAttacksHelper(row, col, range, team, possible);
+		}
 		return possible;
 	}
 	
