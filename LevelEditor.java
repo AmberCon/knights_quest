@@ -7,7 +7,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import model.LevelEditorModel;
+import model.Team;
 import onboard.Archer;
 import onboard.BlockedSeeThroughTile;
 import onboard.BlockedTile;
@@ -29,12 +31,13 @@ public class LevelEditor {
 	private LevelEditorModel model;
 	private BorderPane root;
 	
+	private static int TILE_SIZE = 64;
 	private static final Tile[] TILE_SAMPLES = new Tile[] {
 		new OpenTile(), new BlockedTile(), new BlockedSeeThroughTile()
 	};
-	@SuppressWarnings("unchecked") //TODO fi this
-	private static final Class<? extends Piece>[] PIECE_CLASSES = new Class[] {
-		Knight.class, Archer.class
+	private static final Piece[] PIECE_SAMPLES = new Piece[] {
+		new Knight(Team.HUMAN), new Knight(Team.COMPUTER),
+		new Archer(Team.HUMAN), new Archer(Team.COMPUTER)	
 	};
 	private static final String NULL_TILE_IMG_PATH = "assets/NullTile.png";
 	
@@ -50,6 +53,7 @@ public class LevelEditor {
 		initMenu();
 		update();
 		initTilesBar();
+		initPiecesBar();
 		mainView.stage.setScene(scene);
 	}
 	
@@ -88,6 +92,8 @@ public class LevelEditor {
 		root.setCenter(map);
 	}
 	
+	
+	
 	/**
 	 * Initializes the menu to the top of root
 	 */
@@ -120,5 +126,23 @@ public class LevelEditor {
 		}
 		
 		root.setBottom(tilesBar);
+	}
+	
+	/**
+	 * Initializes the pieces bar to the left of the screen
+	 */
+	private void initPiecesBar() {
+		//TODO Encapsulate with scrollpane if we get that many pieces
+		VBox piecesBar = new VBox();
+		
+		piecesBar.getChildren().add(new ImageView(NULL_TILE_IMG_PATH)); //TODO no piece icon?
+		for(Piece p:PIECE_SAMPLES) {
+			ImageView pieceImg = new ImageView(p.getSpriteFileName());
+			pieceImg.setFitWidth(TILE_SIZE);
+			pieceImg.setFitHeight(TILE_SIZE);
+			piecesBar.getChildren().add(pieceImg);
+		}
+		
+		root.setLeft(piecesBar);
 	}
 }
