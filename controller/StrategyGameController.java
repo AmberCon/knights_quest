@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import computer_player.ComputerPlayer;
 import model.StrategyGameModel;
 import model.Team;
 import onboard.FriendlyFireException;
