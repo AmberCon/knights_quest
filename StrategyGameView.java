@@ -20,17 +20,21 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -230,33 +234,52 @@ public class StrategyGameView extends Application {
 		saves.setSpacing(10);
 		List<String> saveNames = getSaves();
 		for (String saveName : saveNames) {
+			HBox saveBox = new HBox();
+			
 			Button save = new Button(saveName);
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
 			save.setOnAction((event) -> {
 				startGame("saves/" + saveName + ".dat");
 			});
-			saves.getChildren().add(save);
+			
+			Button deleteSave = new Button("Delete");
+			deleteSave.setPrefHeight(30);
+			deleteSave.setStyle("-fx-font-size:15");
+			deleteSave.setOnAction((event) -> {
+				Dialog<String> deleteSaveDialog = new Dialog<String>();
+				deleteSaveDialog.setTitle("Delete Save");
+				deleteSaveDialog.setHeaderText( "Are you sure you want to delete this save?");
+				deleteSaveDialog.setContentText("It cannot be recovered later.");
+				
+				ButtonType deleteButtonType = new ButtonType("Delete");
+				ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.OK_DONE);
+				
+				deleteSaveDialog.getDialogPane().getButtonTypes().addAll(deleteButtonType, cancelButtonType);
+				
+				Button deleteButton = (Button) deleteSaveDialog.getDialogPane().lookupButton(deleteButtonType);
+		        
+		        deleteButton.setOnAction((e) -> {
+		        	File saveFile = new File("saves/" + saveName + ".dat");
+					saveFile.delete();
+					resumeGame();
+		        });
+				
+				deleteSaveDialog.showAndWait();
+			});
+			
+			saveBox.getChildren().add(save);
+			saveBox.getChildren().add(deleteSave);
+			
+			saveBox.setAlignment(Pos.CENTER);
+			
+			HBox.setMargin(save, new Insets(0,10,0,0));
+			
+			saves.getChildren().add(saveBox);
 		}
 		
 		// Delete a save
-		Button deleteSave = new Button("Delete Save");
-		deleteSave.setPrefSize(150, 50);
-		deleteSave.setStyle("-fx-font-size:20");
-		deleteSave.setOnAction((event) -> {
-			TextInputDialog deleteSaveDialog = new TextInputDialog();
-			deleteSaveDialog.setTitle("Delete Save");
-			deleteSaveDialog.setHeaderText( "Enter the name of the save you would like to delete.");
-			deleteSaveDialog.setContentText("Save Name:");
-			
-			Optional<String> fileName = deleteSaveDialog.showAndWait();
-			
-			fileName.ifPresent(file -> {
-				File saveFile = new File("saves/" + file + ".dat");
-				saveFile.delete();
-			});
-			resumeGame();
-		});
+		
 		
 		// Back to main menu
 		Button backToMain = new Button("Main Menu");
@@ -273,12 +296,10 @@ public class StrategyGameView extends Application {
 		
 		center.add(title, 0, 0);
 		center.add(saves, 0, 1);
-		center.add(deleteSave, 0, 2);
 		center.add(backToMain, 0, 3);
 		
 		GridPane.setMargin(title, new Insets(0, 0, 25, 0));
 		GridPane.setMargin(saves, new Insets(0, 0, 50, 0));
-		GridPane.setMargin(deleteSave, new Insets(0, 0, 25, 0));
 		
 		centerGUI.getChildren().add(center);
 		saveSelectWindow.setCenter(centerGUI);
