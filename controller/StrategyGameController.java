@@ -150,6 +150,8 @@ public class StrategyGameController{
 		return model.getTurn();
 	}
 	
+
+	
 	/**
 	 * This method will simulate an attack for the game. The piece at the "by" coordinates will
 	 * attack the piece at the "against" coordinates if it is a valid attack. The method will

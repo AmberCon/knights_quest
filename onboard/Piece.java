@@ -70,7 +70,8 @@ public abstract class Piece implements Serializable{
 	 * team
 	 * @throws InvalidRemovalException 
 	 */
-	public void attack(Tile tileToAttack) throws FriendlyFireException, InvalidRemovalException {
+	public void attack(Tile tileToAttack) 
+			throws FriendlyFireException, InvalidRemovalException {
 		Piece pieceToAttack = tileToAttack.getPiece();
 		
 		if(pieceToAttack.getTeam().equals(this.team)) {

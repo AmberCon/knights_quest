@@ -18,6 +18,14 @@ import onboard.OutOfMovesException;
 import onboard.Piece;
 import onboard.Tile;
 
+/**
+ * This class implements the logic for the Computer player.
+ * The main logic involves a Breadth-First search to find
+ * 
+ * 
+ * @author Drake Sitaraman
+ *
+ */
 public class ComputerPlayer{
 	
 	private StrategyGameController controller;
@@ -35,6 +43,10 @@ public class ComputerPlayer{
 	private final int UP_LEFT = 5;
 	private final int DOWN_RIGHT = 6;
 	private final int DOWN_LEFT = 7;
+	
+	//These two fields are for testing shortest path.
+	protected int shortestRow;
+	protected int shortestCol;
 	
 	public ComputerPlayer(StrategyGameController controller, StrategyGameModel model) {
 		this.controller = controller;
@@ -84,37 +96,58 @@ public class ComputerPlayer{
 		return model.getTile(row, col);
 	}
 	
-	public void moveTowardHumanPiece(Piece piece, int compPieceRow, int compPieceCol) {
+	protected void moveTowardHumanPiece(Piece piece, int compPieceRow, int compPieceCol) {
+
 		Stack<Coordinate> shortestPath = shortestPath(compPieceRow, compPieceCol);
-		int moveDistance = piece.getMoveDistanceRemaining();
 		
-		while(shortestPath.size() > 1 && moveDistance > 0) {
+		if(shortestPath == null) {
+			piece.defend();
+			return;
+		}
+		
+		int currRow = compPieceRow;
+		int currCol = compPieceCol;
+		
+		while(shortestPath.size() > piece.getAttackDistance() ) {
 			Coordinate nextMove = shortestPath.pop();
 			Tile toMove = coordToTile(nextMove.row, nextMove.col);
-			try {
+
+			try {//TODO: Update this when the controller is tested
+				//controller.move(currRow, currCol, nextMove.row, nextMove.col);
 				toMove.setPiece(piece);
 				piece.move(1);
+				currRow = nextMove.row;
+				currCol = nextMove.col;
 				
-			//OutOfMoves will never happen, but InvalidMove could happen
+			//OutOfMoves will probably happen. InvalidMove could happen
 			//If there is a piece blocking.
 			} catch (InvalidMoveException | OutOfMovesException e) {
-				break;
+				controller.defend(currRow, currCol);
+				return;
 			} 
 		}
 		
+
+		
+		//Pop until only the enemy's coordinates remains on the stack.
+		while(shortestPath.size() > 1) {
+			shortestPath.pop();
+		}
+		
+		
 		Coordinate potentialAttack = shortestPath.pop();
-		Tile pAttackTile = coordToTile(potentialAttack.row, potentialAttack.col);
+
+
 		
 		try {
-			piece.attack(pAttackTile);
-		} catch (FriendlyFireException | InvalidRemovalException e) {
-			piece.defend();
-
+			controller.attack(currRow, currCol, potentialAttack.row, potentialAttack.col);
+		} catch (FriendlyFireException | InvalidRemovalException e1) {
+			controller.defend(currRow, currCol);
 		}
 	}
 
 
-	public Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
+	private Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
 		
 		Queue<Coordinate> q = new LinkedList<Coordinate>();
 		HashSet<Coordinate> coordinatesVisited = new HashSet<Coordinate>();
@@ -152,6 +185,8 @@ public class ComputerPlayer{
 				
 				Piece onAdjacent = tile.getPiece();
 				
+		
+				
 
 				//Human found, start executing path.
 				if(onAdjacent != null && onAdjacent.getTeam().equals(Team.HUMAN)) {
@@ -169,13 +204,14 @@ public class ComputerPlayer{
 	private Stack<Coordinate> getPath(Coordinate[][] pathTo, Coordinate finalCoord){
 		Stack<Coordinate> shortestPath = new Stack<Coordinate>();
 		
-		System.out.println(finalCoord);
+		shortestRow = finalCoord.row;
+		shortestCol = finalCoord.col;
+		
 		shortestPath.push(finalCoord);
 		Coordinate currCoord = pathTo[finalCoord.row][finalCoord.col];
 		
 		while(currCoord != null) {
 			shortestPath.push(currCoord);
-			System.out.println(currCoord);
 			currCoord = pathTo[currCoord.row][currCoord.col];
 		}
 		
