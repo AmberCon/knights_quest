@@ -21,6 +21,8 @@ import onboard.Tile;
 /**
  * This class implements the logic for the Computer player.
  * The main logic involves a Breadth-First search to find
+ * the path for the ComputerPlayer to move each of their
+ * pieces toward or away from the nearest human piece.
  * 
  * 
  * @author Drake Sitaraman
@@ -34,7 +36,7 @@ public class ComputerPlayer{
 	private final int boardHeight;
 	private final int boardWidth;
 	
-	
+	//Constants used for the BFS
 	private final int UP = 0;
 	private final int DOWN = 1;
 	private final int LEFT = 2;
@@ -48,6 +50,13 @@ public class ComputerPlayer{
 	protected int shortestRow;
 	protected int shortestCol;
 	
+	/**
+	 * Initializes the model, controller, constants for board height and width,
+	 * and gets references to each of the Computer Player's pieces.
+	 * 
+	 * @param controller
+	 * @param model
+	 */
 	public ComputerPlayer(StrategyGameController controller, StrategyGameModel model) {
 		this.controller = controller;
 		this.model = model;
@@ -57,7 +66,9 @@ public class ComputerPlayer{
 	}
 	
 	
-	
+	/**
+	 * This method gets references to each of the Computer Player's pieces.
+	 */
 	private void getPieces() {
 		pieces = new ArrayList<Piece>();
 		for(int row = 0; row<boardHeight; row++) {
@@ -72,6 +83,20 @@ public class ComputerPlayer{
 		
 	}
 	
+	/**
+	 * This method converts human-readable constants into their equivalent
+	 * coordinates. This is useful for looping through each direction
+	 * in the BFS.
+	 * 
+	 * @param fromRow is an int representing the current relative row.
+	 * @param fromCol is an int representing the current relative column.
+	 * @param direction is an int representing a constant direction 0-7.
+	 * These are all private static final constants declared at the top
+	 * of the program and used in the switch statement.
+	 * 
+	 * @return A Coordinate object representing a (row,col) coordinate
+	 * pair, which is a direction away from the current row and column.
+	 */
 	private Coordinate getCoordinate(int fromRow, int fromCol, int direction) {
 		switch(direction) {
 			case(UP): return new Coordinate(fromRow-1, fromCol);
@@ -85,7 +110,15 @@ public class ComputerPlayer{
 		
 		return new Coordinate(fromRow+1, fromCol-1);
 	}
-	
+	/**
+	 * This method gets a Tile object from the model from a row
+	 * and column ints as input.
+	 * 
+	 * @param row is an int representing the row.
+	 * @param col is an int representing the column
+	 * @return The Tile object in the 2D array if it exists, or
+	 * null if it is out of bounds.
+	 */
 	private Tile coordToTile(int row, int col) {
 		
 		//Out of bounds
@@ -96,10 +129,25 @@ public class ComputerPlayer{
 		return model.getTile(row, col);
 	}
 	
+	/**
+	 * This method moves a piece towards a human. This is done, first,
+	 * by calling the shortest path method. Then, the computer advances
+	 * as many tiles along that path as it can, until it gets within its
+	 * attack range. Once this happens, the Piece attacks the human
+	 * piece found from the shortest path algorithm. If the Piece
+	 * is too far away, it defends.
+	 * 
+	 * @param piece is a Piece object representing the computer player's current
+	 * piece.
+	 * 
+	 * @param compPieceRow is the row as an int, where the current piece is.
+	 * @param compPieceCol is the col as an int, where the current piece is.
+	 */
 	protected void moveTowardHumanPiece(Piece piece, int compPieceRow, int compPieceCol) {
 
 		Stack<Coordinate> shortestPath = shortestPath(compPieceRow, compPieceCol);
 		
+		//This will probably never happen
 		if(shortestPath == null) {
 			piece.defend();
 			return;
@@ -119,8 +167,8 @@ public class ComputerPlayer{
 				currRow = nextMove.row;
 				currCol = nextMove.col;
 				
-			//OutOfMoves will probably happen. InvalidMove could happen
-			//If there is a piece blocking.
+			//OutOfMoves will happen if not in the attack range. InvalidMove could happen
+			//If there is a piece blocking the computer piece's path.
 			} catch (InvalidMoveException | OutOfMovesException e) {
 				controller.defend(currRow, currCol);
 				return;
@@ -135,24 +183,38 @@ public class ComputerPlayer{
 		}
 		
 		
-		Coordinate potentialAttack = shortestPath.pop();
+		Coordinate attack = shortestPath.pop();
 
 
 		
 		try {
-			controller.attack(currRow, currCol, potentialAttack.row, potentialAttack.col);
+			controller.attack(currRow, currCol, attack.row, attack.col);
+		
+		//This will never happen, but defend if it does.
 		} catch (FriendlyFireException | InvalidRemovalException e1) {
 			controller.defend(currRow, currCol);
 		}
 	}
 
-
+	
+	/**
+	 * This method represents a common algorithm for a Breadth-First
+	 * search. Each Coordinate on the board is represented
+	 * using a "Coordinate" inner class. Each Coordinate visited
+	 * will enqueue all 8 directions, assuming the tile
+	 * is not out of bounds.
+	 * 
+	 * @param fromRow is the row as an int where the computer piece is.
+	 * @param fromCol is the col as an int where the computer piece is.
+	 * @return The shortest path from the computer piece's coordinates
+	 * to the nearest human piece's coordinates as a Stack.
+	 */
 	private Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
 		
 		Queue<Coordinate> q = new LinkedList<Coordinate>();
 		HashSet<Coordinate> coordinatesVisited = new HashSet<Coordinate>();
 		
-		
+		//Keep track of how you got to a particular coordinate.
 		Coordinate[][] pathTo = new Coordinate[boardHeight][boardWidth];
 		
 		Coordinate start = new Coordinate(fromRow, fromCol);
@@ -165,6 +227,8 @@ public class ComputerPlayer{
 			Coordinate c = q.remove();
 			coordinatesVisited.add(c);
 			
+			
+			//Visit all 8 directions.
 			for(int i = 0; i<8; i++) {
 				
 				Coordinate adjacent = getCoordinate(c.row, c.col, i);
@@ -201,6 +265,21 @@ public class ComputerPlayer{
 		
 	}
 	
+	/**
+	 * When this method is called, a shortest path has been found. The
+	 * path is stored in the 2D Coordinate array, pathTo. 
+	 * 
+	 * @param pathTo is a 2D Coordinate array where a [row][col] array
+	 * which represents which Coordinate the computer would have to
+	 * move through to row,col.
+	 * 
+	 * @param finalCoord is the Coordinate representing the human's location
+	 * on the board.
+	 * 
+	 * @return A conversion from the 2D array to a one-dimensional stack, where
+	 * the top of the stack is the first possible human move and the bottom
+	 * of the stack is where the nearest human piece is.
+	 */
 	private Stack<Coordinate> getPath(Coordinate[][] pathTo, Coordinate finalCoord){
 		Stack<Coordinate> shortestPath = new Stack<Coordinate>();
 		
@@ -220,17 +299,28 @@ public class ComputerPlayer{
 		return shortestPath;
 	}
 	
+	/**
+	 * Simple class representing a (row, col) tuple. Useful
+	 * for determining visited Coordinates in the BFS.
+	 * 
+	 * @author Drake Sitaraman
+	 *
+	 */
 	private class Coordinate {
 		public int row;
 		public int col;
-	
 
+		
 		public Coordinate(int row, int col) {
 			this.row = row;
 			this.col = col;
 		}
 		
+		/**
+		 * Two Coordinates are equal if their row and col are equal.
+		 */
 		public boolean equals(Object other) {
+			//This will never happen.
 			if(!(other instanceof Coordinate)) {
 				return false;
 			}
@@ -240,6 +330,10 @@ public class ComputerPlayer{
 			return ((this.row == o.row) && (this.col == o.col));
 		}
 		
+		/**
+		 * Return a HashCode, so visited Coordinates can be represented
+		 * in a HashSet.
+		 */
 		public int hashCode() {
 			return (row+col)/2;
 		}
