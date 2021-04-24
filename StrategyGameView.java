@@ -192,6 +192,7 @@ public class StrategyGameView extends Application {
 		GridPane.setHalignment(levels, HPos.CENTER);
 		
 		GridPane.setMargin(title, new Insets(0, 0, 100, 0));
+		GridPane.setMargin(levels, new Insets(0, 0, 50, 0));
 		
 		centerGUI.getChildren().add(center);
 		levelWindow.setCenter(centerGUI);

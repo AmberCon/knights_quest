@@ -65,14 +65,14 @@ public class CreateLevel {
 				{new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
 		maps[1] = map2;
 		
-		Tile[][] map3 = {{new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
+		Tile[][] map3 = {{new BlockedTile(),new BlockedTile(),new BlockedTile(),new OpenTile(new Knight(Team.COMPUTER)),new BlockedTile(),new BlockedTile(),new OpenTile(new Knight(Team.COMPUTER)),new BlockedTile()},
+						 {new BlockedTile(),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new BlockedTile(),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new BlockedTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new BlockedTile()},
+						 {new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new OpenTile()},
+						 {new BlockedTile(),new OpenTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new OpenTile()},
+						 {new BlockedTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
+						 {new BlockedTile(),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
 		maps[2] = map3;
 		
 		Tile[][] map4 = {{new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
@@ -85,14 +85,18 @@ public class CreateLevel {
 				 		 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
 		maps[3] = map4;
 		
-		Tile[][] map5 = {{new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()},
-						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile()}};
+		Tile[][] map5 = {{new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.COMPUTER)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(new Knight(Team.COMPUTER)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new BlockedTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Knight(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(new Archer(Team.HUMAN)),new OpenTile(),new OpenTile(),new OpenTile(),new OpenTile(), new OpenTile()},
+						 {new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile(),new BlockedTile()}};
 		maps[4] = map5;
 		
 		return maps;
