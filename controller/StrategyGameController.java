@@ -309,7 +309,9 @@ public class StrategyGameController{
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
-		if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
+		if(!model.getTile(row, col).canShootThrough()) {
+			// If you cannot shoot through the current tile, do nothing
+		} else if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
 			if(model.getTile(row, col).hasPlayer()) {
 				if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
 					int[] coord = {row, col};
