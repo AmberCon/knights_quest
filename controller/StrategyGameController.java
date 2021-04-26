@@ -309,28 +309,29 @@ public class StrategyGameController{
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
-		if(!model.getTile(row, col).canShootThrough()) {
-			// If you cannot shoot through the current tile, do nothing
-		} else if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
-			if(model.getTile(row, col).hasPlayer()) {
-				if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
-					int[] coord = {row, col};
-					if(!isInList(possible, coord)) {
-						possible.add(coord);
+		// If the row and col are valid
+		if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
+			// If the tile is able to be shot through
+			if(model.getTile(row, col).canShootThrough()) {
+				if(model.getTile(row, col).hasPlayer()) {
+					if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
+						int[] coord = {row, col};
+						if(!isInList(possible, coord)) {
+							possible.add(coord);
+						}
 					}
 				}
+				if(range > 0) {
+					getValidAttacksHelper(row + 1, col, range - 1, team, possible);
+					getValidAttacksHelper(row + 1, col, range - 1, team, possible);
+					getValidAttacksHelper(row + 1, col - 1, range - 1, team, possible);
+					getValidAttacksHelper(row - 1, col, range - 1, team, possible);
+					getValidAttacksHelper(row - 1, col + 1, range - 1, team, possible);
+					getValidAttacksHelper(row - 1, col - 1, range - 1, team, possible);
+					getValidAttacksHelper(row, col + 1, range - 1, team, possible);
+					getValidAttacksHelper(row, col - 1, range - 1, team, possible);
+				}
 			}
-			if(range > 0) {
-				getValidAttacksHelper(row + 1, col, range - 1, team, possible);
-				getValidAttacksHelper(row + 1, col, range - 1, team, possible);
-				getValidAttacksHelper(row + 1, col - 1, range - 1, team, possible);
-				getValidAttacksHelper(row - 1, col, range - 1, team, possible);
-				getValidAttacksHelper(row - 1, col + 1, range - 1, team, possible);
-				getValidAttacksHelper(row - 1, col - 1, range - 1, team, possible);
-				getValidAttacksHelper(row, col + 1, range - 1, team, possible);
-				getValidAttacksHelper(row, col - 1, range - 1, team, possible);
-			}
-			
 		}
 	}
 	
