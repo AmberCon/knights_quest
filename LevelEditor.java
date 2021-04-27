@@ -26,6 +26,7 @@ import model.LevelEditorModel;
 import model.SaveFailureException;
 import model.Team;
 import onboard.Archer;
+import onboard.ArmoredKnight;
 import onboard.BlockedSeeThroughTile;
 import onboard.BlockedTile;
 import onboard.Horseman;
@@ -57,7 +58,8 @@ public class LevelEditor {
 	private static final Piece[] PIECE_SAMPLES = new Piece[] {
 		new Knight(Team.HUMAN), new Knight(Team.COMPUTER),
 		new Archer(Team.HUMAN), new Archer(Team.COMPUTER),
-		new Horseman(Team.HUMAN), new Horseman(Team.COMPUTER)
+		new Horseman(Team.HUMAN), new Horseman(Team.COMPUTER),
+		new ArmoredKnight(Team.HUMAN), new ArmoredKnight(Team.COMPUTER)
 	};
 	private static final String NULL_TILE_IMG_PATH = "assets/NullTile.png";
 	
