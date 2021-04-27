@@ -3,25 +3,25 @@ package onboard;
 import model.Team;
 
 /**
- * This class represents the Armored Knight piece.
+ * This class represents the Pegasus piece.
  * 
- * The Armored Knight is a piece with an exceptional defense but low damage.
+ * The Pegusus is a piece that can fly over obstacles, but has low damage and defense.
  * 
  * @author Ember Chan
  *
  */
-public class ArmoredKnight extends Piece {
+public class Pegasus extends Flyer {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	/**
-	 * Constructor for a new Armored Knight
-	 * @param team - the team the new armored knight is on
+	 * Constructor for a new Pegasus
+	 * @param team - the team the new pegasus is on
 	 */
-	public ArmoredKnight(Team team) {
+	public Pegasus(Team team) {
 		super();
 		
 		health = 100;
@@ -31,17 +31,17 @@ public class ArmoredKnight extends Piece {
 		
 		attackDistance = 1; //Meelee unit
 		
-		defenseRange[0] = 25; //Lower bound for defense
-		defenseRange[1] = 35; //Upper bound for defense
+		defenseRange[0] = 0; //Lower bound for defense
+		defenseRange[1] = 10; //Upper bound for defense
 		
-		moveDistanceRemaining = 1; //How many moves per turn the character has
+		moveDistanceRemaining = 3; //Can moves 3 tiles per turn - very mobile character
 		
 		isDefended = false;
 		hasAttackedOrDefended = false;
 		
 		this.team = team;
 		
-		spriteFileName = "assets/armored_knight_"+ this.team +".png";
+		spriteFileName = "assets/pegasus_"+ this.team +".png";
 
 	}
 
@@ -52,7 +52,8 @@ public class ArmoredKnight extends Piece {
 	 */
 	@Override
 	public void resetTurn() {
-		moveDistanceRemaining = 1;
+		moveDistanceRemaining = 3;
 		hasAttackedOrDefended = false;
 	}
+
 }
