@@ -28,6 +28,7 @@ import model.Team;
 import onboard.Archer;
 import onboard.BlockedSeeThroughTile;
 import onboard.BlockedTile;
+import onboard.Horseman;
 import onboard.InvalidMoveException;
 import onboard.InvalidRemovalException;
 import onboard.Knight;
@@ -55,7 +56,8 @@ public class LevelEditor {
 	};
 	private static final Piece[] PIECE_SAMPLES = new Piece[] {
 		new Knight(Team.HUMAN), new Knight(Team.COMPUTER),
-		new Archer(Team.HUMAN), new Archer(Team.COMPUTER)	
+		new Archer(Team.HUMAN), new Archer(Team.COMPUTER),
+		new Horseman(Team.HUMAN), new Horseman(Team.COMPUTER)
 	};
 	private static final String NULL_TILE_IMG_PATH = "assets/NullTile.png";
 	
