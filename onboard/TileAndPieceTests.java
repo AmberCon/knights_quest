@@ -41,21 +41,21 @@ public class TileAndPieceTests{
 				testGrid[i][j] = new OpenTile();
 				//No piece there initially, can move and shoot through it
 				assertNull(testGrid[i][j].getPiece());
-				assertTrue(testGrid[i][j].canMoveInto());
+				assertTrue(testGrid[i][j].canMoveInto(new Knight(Team.HUMAN)));
 				assertTrue(testGrid[i][j].canShootThrough());
 			}	
 		}
 		
 		//Test Blocked Tile--no piece, can't move through, can't shoot through
 		testGrid[2][2] = new BlockedTile();
-		assertFalse(testGrid[2][2].canMoveInto());
+		assertFalse(testGrid[2][2].canMoveInto(new Knight(Team.HUMAN)));
 		assertFalse(testGrid[2][2].canShootThrough());
 		assertNull(testGrid[2][2].getPiece());
 		
 		
 		//Test Blocked See Through tile--no piece, can't move through, can shoot through
 		testGrid[3][2] = new BlockedSeeThroughTile();
-		assertFalse(testGrid[3][2].canMoveInto());
+		assertFalse(testGrid[3][2].canMoveInto(new Knight(Team.HUMAN)));
 		assertTrue(testGrid[3][2].canShootThrough());
 		assertNull(testGrid[3][2].getPiece());
 		
@@ -67,7 +67,7 @@ public class TileAndPieceTests{
 		testGrid[0][0] = new OpenTile(k1);
 		assertEquals(testGrid[0][0].getPiece(), k1);
 		assertTrue(testGrid[0][0].canShootThrough());
-		assertFalse(testGrid[0][0].canMoveInto());
+		assertFalse(testGrid[0][0].canMoveInto(new Knight(Team.HUMAN)));
 		
 		testGrid[0][1].setPiece(k2);
 		
