@@ -97,21 +97,21 @@ public class StrategyGameView extends Application {
 		title.setFill(Color.ANTIQUEWHITE);
 		
 		Button resume = new Button("Resume Game");
-		resume.setPrefSize(200, 50);
+		resume.setPrefSize(200, 60);
 		resume.setStyle("-fx-font-size:20");
 		resume.setOnAction((event) -> {
 					resumeGame();
 			});
 		
 		Button selectLevel = new Button("Select Level");
-		selectLevel.setPrefSize(200, 50);
+		selectLevel.setPrefSize(200, 60);
 		selectLevel.setStyle("-fx-font-size:20");
 		selectLevel.setOnAction((event) -> {
 					levelSelect();
 			});
 		
 		Button levelEditor = new Button("Level Editor");
-		levelEditor.setPrefSize(200, 50);
+		levelEditor.setPrefSize(200, 60);
 		levelEditor.setStyle("-fx-font-size:20");
 		levelEditor.setOnAction((event) -> {
 					startLevelEditor();
@@ -128,8 +128,8 @@ public class StrategyGameView extends Application {
 		center.add(levelEditor, 0, 3);
 		
 		GridPane.setMargin(title, new Insets(0, 0, 100, 0));
-		GridPane.setMargin(resume, new Insets(20, 0, 50, 0));
-		GridPane.setMargin(selectLevel, new Insets(20, 0, 50, 0));
+		GridPane.setMargin(resume, new Insets(0, 0, 40, 0));
+		GridPane.setMargin(selectLevel, new Insets(0, 0, 40, 0));
 		
 		centerGUI.getChildren().add(center);
 		window.setCenter(centerGUI);
