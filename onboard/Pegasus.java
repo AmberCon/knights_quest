@@ -29,7 +29,7 @@ public class Pegasus extends Flyer {
 		attackRange[0] = 10; //Lower bound for attack damage
 		attackRange[1] = 15; //Upper bound for attack damage
 		
-		attackDistance = 1; //Meelee unit
+		attackDistance = 1; //Melee unit
 		
 		defenseRange[0] = 0; //Lower bound for defense
 		defenseRange[1] = 10; //Upper bound for defense
