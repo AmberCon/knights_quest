@@ -21,10 +21,13 @@ public class BlockedTile extends Tile{
 	
 	@Override
 	/**
-	 * @return false
+	 * Method for whether a piece can move into this tile.
+	 * 
+	 * Blocked tiles will only allow flying units to occpy them.
+	 * @return true if the piece can move into the tile, false otherwise
 	 */
-	public boolean canMoveInto() {
-		return false;
+	public boolean canMoveInto(Piece p) {
+		return super.canMoveInto(p) && p instanceof Flyer;
 	}
 
 	@Override
