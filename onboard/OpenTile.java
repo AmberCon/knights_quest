@@ -10,13 +10,12 @@ package onboard;
  *
  */
 public class OpenTile extends Tile{
-	
-	
+		
 	/**
 	 * Default constructor, assumes there is no piece on it.
 	 */
 	public OpenTile() {
-		super.piece = null;
+		this(null);
 	}
 	
 	/**
@@ -26,6 +25,7 @@ public class OpenTile extends Tile{
 	 * @param piece is a Piece object.
 	 */
 	public OpenTile(Piece piece) {
+		imgPath="assets/OpenTile.png";
 		super.piece = piece;
 	}
 	

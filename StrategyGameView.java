@@ -110,6 +110,13 @@ public class StrategyGameView extends Application {
 					levelSelect();
 			});
 		
+		Button levelEditor = new Button("Level Editor");
+		levelEditor.setPrefSize(200, 50);
+		levelEditor.setStyle("-fx-font-size:20");
+		levelEditor.setOnAction((event) -> {
+					startLevelEditor();
+			});
+		
 		ColumnConstraints elemColumn = new ColumnConstraints();
 		elemColumn.setPercentWidth(100);
 		elemColumn.setHalignment(HPos.CENTER);
@@ -118,9 +125,11 @@ public class StrategyGameView extends Application {
 		center.add(title, 0, 0);
 		center.add(resume, 0, 1);
 		center.add(selectLevel, 0, 2);
+		center.add(levelEditor, 0, 3);
 		
 		GridPane.setMargin(title, new Insets(0, 0, 100, 0));
 		GridPane.setMargin(resume, new Insets(20, 0, 50, 0));
+		GridPane.setMargin(selectLevel, new Insets(20, 0, 50, 0));
 		
 		centerGUI.getChildren().add(center);
 		window.setCenter(centerGUI);
@@ -364,6 +373,20 @@ public class StrategyGameView extends Application {
 		
 		Scene game = new Scene(gameWindow, dimensions[0]+50, dimensions[1]+50);
 		stage.setScene(game);
+	}
+	
+	/**
+	 * Takes the user to the level editor
+	 */
+	private void startLevelEditor() {
+		new LevelEditor(this);
+	}
+	
+	/**
+	 * Returns the user to the main menu
+	 */
+	public void returnToMainMenu() {
+		stage.setScene(mainMenu);
 	}
 	
 	/**

@@ -190,6 +190,14 @@ public abstract class Piece implements Serializable{
 	}
 	
 	/**
+	 * Sets this piece's team to the given team
+	 * @param t the Team to change this piece's team to 
+	 */
+	public void setTeam(Team t) {
+		team = t;
+	}
+	
+	/**
 	 * @return The file path of the piece's sprite (for the view).
 	 */
 	public String getSpriteFileName() {

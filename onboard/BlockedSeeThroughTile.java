@@ -9,7 +9,15 @@ package onboard;
  *
  */
 public class BlockedSeeThroughTile extends Tile{
-
+	
+	/**
+	 * No arg constructor for BlockedSeeThroughTile
+	 */
+	public BlockedSeeThroughTile() {
+		super();
+		imgPath="assets/BlockedSeeThroughTile.png";
+	}
+	
 	@Override
 	/**
 	 * @return false
