@@ -13,6 +13,11 @@ import model.Team;
 public class Horseman extends Piece{
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Constructor for a new Horseman
 	 * @param team - the team the new horseman is on
 	 */
