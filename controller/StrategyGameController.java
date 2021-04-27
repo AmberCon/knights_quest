@@ -610,6 +610,9 @@ public class StrategyGameController{
 		}
 		model.nextTurn();
 		model.setUpNotifyObservers();
+		if (model.getTurn() == Team.COMPUTER) {
+			computerTurn();
+		}
 	}
 	
 	/**
