@@ -50,6 +50,10 @@ public class Knight extends Piece{
 	public void resetTurn() {
 		moveDistanceRemaining = 1;
 		hasAttackedOrDefended = false;
+		if (isRested) {
+			health += Math.floor(Math.random()*(11)+10);
+			health = Math.min(health, 100);
+		}
 	}
 
 	

@@ -24,6 +24,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -117,6 +118,13 @@ public class StrategyGameView extends Application {
 					startLevelEditor();
 			});
 		
+		Button displayRules = new Button("Piece Info");
+		displayRules.setPrefSize(200, 60);
+		displayRules.setStyle("-fx-font-size:20");
+		displayRules.setOnAction((event) -> {
+					displayRules();
+			});
+		
 		ColumnConstraints elemColumn = new ColumnConstraints();
 		elemColumn.setPercentWidth(100);
 		elemColumn.setHalignment(HPos.CENTER);
@@ -126,10 +134,12 @@ public class StrategyGameView extends Application {
 		center.add(resume, 0, 1);
 		center.add(selectLevel, 0, 2);
 		center.add(levelEditor, 0, 3);
+		center.add(displayRules, 0, 4);
 		
-		GridPane.setMargin(title, new Insets(0, 0, 100, 0));
+		GridPane.setMargin(title, new Insets(0, 0, 60, 0));
 		GridPane.setMargin(resume, new Insets(0, 0, 40, 0));
 		GridPane.setMargin(selectLevel, new Insets(0, 0, 40, 0));
+		GridPane.setMargin(levelEditor, new Insets(0, 0, 40, 0));
 		
 		centerGUI.getChildren().add(center);
 		window.setCenter(centerGUI);
@@ -185,9 +195,17 @@ public class StrategyGameView extends Application {
 			}
 		}
 		
+		// Custom Levels
+		Button displayCustomLevels = new Button("Custom Levels");
+		displayCustomLevels.setPrefSize(200, 75);
+		displayCustomLevels.setStyle("-fx-font-size:20");
+		displayCustomLevels.setOnAction((event) -> {
+			displayCustomLevels();
+		});
+		
 		// Back to main menu
 		Button backToMain = new Button("Main Menu");
-		backToMain.setPrefSize(150, 50);
+		backToMain.setPrefSize(200, 75);
 		backToMain.setStyle("-fx-font-size:20");
 		backToMain.setOnAction((event) -> {
 			stage.setScene(mainMenu);
@@ -200,12 +218,14 @@ public class StrategyGameView extends Application {
 		
 		center.add(title, 0, 0);
 		center.add(levels, 0, 1);
-		center.add(backToMain, 0, 2);
+		center.add(displayCustomLevels, 0, 2);
+		center.add(backToMain, 0, 3);
 		
 		GridPane.setHalignment(levels, HPos.CENTER);
 		
 		GridPane.setMargin(title, new Insets(0, 0, 100, 0));
 		GridPane.setMargin(levels, new Insets(0, 0, 50, 0));
+		GridPane.setMargin(displayCustomLevels, new Insets(0, 0, 20, 0));
 		
 		centerGUI.getChildren().add(center);
 		levelWindow.setCenter(centerGUI);
@@ -287,9 +307,6 @@ public class StrategyGameView extends Application {
 			saves.getChildren().add(saveBox);
 		}
 		
-		// Delete a save
-		
-		
 		// Back to main menu
 		Button backToMain = new Button("Main Menu");
 		backToMain.setPrefSize(150, 50);
@@ -314,6 +331,171 @@ public class StrategyGameView extends Application {
 		saveSelectWindow.setCenter(centerGUI);
 		
 		Scene levelSelect = new Scene(saveSelectWindow, 600, 600);
+		stage.setScene(levelSelect);
+		stage.show();
+	}
+	
+	/**
+	 * Displays a list of custom levels
+	 */
+	private void displayCustomLevels() {
+		BorderPane levelWindow = new BorderPane();
+		
+		VBox centerGUI = new VBox();
+		
+		centerGUI.setPadding(new Insets(110,10,100,10));
+		centerGUI.setBackground(new Background(new BackgroundImage(new Image("assets/menu_background.jpg"), 
+                									BackgroundRepeat.NO_REPEAT, 
+                									BackgroundRepeat.NO_REPEAT, 
+                									BackgroundPosition.DEFAULT, 
+                									new BackgroundSize(100, 100, true, true, false, true))));
+		
+		GridPane center = new GridPane();
+		
+		// Title
+		Text title = new Text("Custom Levels");
+		title.setFont(Font.font("Palatino", 80));
+		title.setFill(Color.ANTIQUEWHITE);
+		
+		// Levels
+		VBox levels = new VBox();
+		levels.setAlignment(Pos.BASELINE_CENTER);
+		levels.setSpacing(10);
+		List<String> levelNames = getCustomLevels();
+		for (String levelName : levelNames) {
+			HBox levelBox = new HBox();
+			
+			Button level = new Button(levelName);
+			level.setPrefHeight(75);
+			level.setStyle("-fx-font-size:20");
+			level.setOnAction((event) -> {
+				startGame("levels/" + levelName + ".dat");
+			});
+			
+			Button deleteLevel = new Button("Delete");
+			deleteLevel.setPrefHeight(30);
+			deleteLevel.setStyle("-fx-font-size:15");
+			deleteLevel.setOnAction((event) -> {
+				Dialog<String> deleteLevelDialog = new Dialog<String>();
+				deleteLevelDialog.setTitle("Delete Level");
+				deleteLevelDialog.setHeaderText( "Are you sure you want to delete this custom level?");
+				deleteLevelDialog.setContentText("It cannot be recovered later.");
+				
+				ButtonType deleteButtonType = new ButtonType("Delete");
+				ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.OK_DONE);
+				
+				deleteLevelDialog.getDialogPane().getButtonTypes().addAll(deleteButtonType, cancelButtonType);
+				
+				Button deleteButton = (Button) deleteLevelDialog.getDialogPane().lookupButton(deleteButtonType);
+		        
+		        deleteButton.setOnAction((e) -> {
+		        	File saveFile = new File("levels/" + levelName + ".dat");
+					saveFile.delete();
+					displayCustomLevels();
+		        });
+				
+				deleteLevelDialog.showAndWait();
+			});
+			
+			levelBox.getChildren().add(level);
+			levelBox.getChildren().add(deleteLevel);
+			
+			levelBox.setAlignment(Pos.CENTER);
+			
+			HBox.setMargin(level, new Insets(0,10,0,0));
+			
+			levels.getChildren().add(levelBox);
+		}
+		
+		Button levelEditor = new Button("Level Editor");
+		levelEditor.setPrefSize(150, 50);
+		levelEditor.setStyle("-fx-font-size:20");
+		levelEditor.setOnAction((event) -> {
+					startLevelEditor();
+		});
+		
+		// Back to main menu
+		Button backToMain = new Button("Main Menu");
+		backToMain.setPrefSize(150, 50);
+		backToMain.setStyle("-fx-font-size:20");
+		backToMain.setOnAction((event) -> {
+			stage.setScene(mainMenu);
+		});
+		
+		ColumnConstraints elemColumn = new ColumnConstraints();
+		elemColumn.setPercentWidth(100);
+		elemColumn.setHalignment(HPos.CENTER);
+		center.getColumnConstraints().add(elemColumn);
+		
+		center.add(title, 0, 0);
+		center.add(levels, 0, 1);
+		center.add(levelEditor, 0, 2);
+		center.add(backToMain, 0, 3);
+		
+		GridPane.setHalignment(levels, HPos.CENTER);
+		
+		GridPane.setMargin(title, new Insets(0, 0, 50, 0));
+		GridPane.setMargin(levels, new Insets(0, 0, 50, 0));
+		GridPane.setMargin(levelEditor, new Insets(0, 0, 10, 0));
+		
+		centerGUI.getChildren().add(center);
+		levelWindow.setCenter(centerGUI);
+		
+		Scene levelSelect = new Scene(levelWindow, 600, 600);
+		stage.setScene(levelSelect);
+		stage.show();
+	}
+	
+	private void displayRules() {
+		BorderPane rulesWindow = new BorderPane();
+		
+		VBox centerGUI = new VBox();
+		
+		centerGUI.setPadding(new Insets(30,10,100,10));
+		centerGUI.setBackground(new Background(new BackgroundImage(new Image("assets/menu_background.jpg"), 
+                									BackgroundRepeat.NO_REPEAT, 
+                									BackgroundRepeat.NO_REPEAT, 
+                									BackgroundPosition.DEFAULT, 
+                									new BackgroundSize(100, 100, true, true, false, true))));
+		
+		GridPane center = new GridPane();
+		
+		// Title
+		Text title = new Text("Rules");
+		title.setFont(Font.font("Palatino", 60));
+		title.setFill(Color.ANTIQUEWHITE);
+		
+		// Pieces
+		ScrollPane rules = new ScrollPane();
+		rules.setContent(new ImageView("assets/rules.png"));
+		rules.setMinHeight(500);
+		
+		// Back to main menu
+		Button backToMain = new Button("Main Menu");
+		backToMain.setPrefSize(150, 50);
+		backToMain.setStyle("-fx-font-size:20");
+		backToMain.setOnAction((event) -> {
+			stage.setScene(mainMenu);
+		});
+		
+		ColumnConstraints elemColumn = new ColumnConstraints();
+		elemColumn.setPercentWidth(100);
+		elemColumn.setHalignment(HPos.CENTER);
+		center.getColumnConstraints().add(elemColumn);
+		
+		center.add(title, 0, 0);
+		center.add(rules, 0, 1);
+		center.add(backToMain, 0, 2);
+		
+		GridPane.setHalignment(rules, HPos.CENTER);
+		
+		GridPane.setMargin(title, new Insets(0, 0, 20, 0));
+		GridPane.setMargin(rules, new Insets(0, 0, 20, 0));
+		
+		centerGUI.getChildren().add(center);
+		rulesWindow.setCenter(centerGUI);
+		
+		Scene levelSelect = new Scene(rulesWindow, 600, 700);
 		stage.setScene(levelSelect);
 		stage.show();
 	}
@@ -594,6 +776,22 @@ public class StrategyGameView extends Application {
 			saves.add(save.replaceAll("(.dat)", ""));
 		}
 		return saves;
+	}
+	
+	/**
+	 * Returns of list of all custom level file names
+	 */
+	private List<String> getCustomLevels() {
+		List<String> levelNames = new ArrayList<String>();
+		File levelsDir = new File("levels");
+		for (String level : levelsDir.list()) {
+			String levelName = level.replaceAll("(.dat)", "");
+			if (!levelName.replaceAll("[0-9]", "").equals("level_")) {
+				levelNames.add(level.replaceAll("(.dat)", ""));
+			}
+			
+		}
+		return levelNames;
 	}
 	
 }

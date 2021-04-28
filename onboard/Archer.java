@@ -49,6 +49,10 @@ public class Archer extends Piece{
 	public void resetTurn() {
 		moveDistanceRemaining = 3;
 		hasAttackedOrDefended = false;
+		if (isRested) {
+			health += Math.floor(Math.random()*(6)+5);
+			health = Math.min(health, 100);
+		}
 	}
 	
 }
