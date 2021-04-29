@@ -12,6 +12,11 @@ import model.Team;
 public class Archer extends Piece{
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Defines stats for the Archer class. These can easily be changed
 	 * without removing functionality from the overall game.
 	 * 

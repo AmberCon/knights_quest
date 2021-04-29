@@ -15,6 +15,10 @@ import java.io.Serializable;
  */
 public abstract class Tile implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected Piece piece; //Piece who is standing on the tile
 	protected String imgPath;
 	
@@ -50,7 +54,7 @@ public abstract class Tile implements Serializable{
 	 * @throws InvalidRemovalException
 	 */
 	public void removePiece() throws InvalidRemovalException {
-		if(this instanceof OpenTile) {
+		if(isOpenTile()) {
 			this.piece = null;
 		} else {
 			throw new InvalidRemovalException("Can't remove the piece from a Blocked tile!");
@@ -63,6 +67,10 @@ public abstract class Tile implements Serializable{
 	 */
 	public boolean hasPlayer() {
 		return piece != null;
+	}
+	
+	public boolean isOpenTile() {
+		return this instanceof OpenTile;
 	}
 	
 	/**

@@ -12,6 +12,11 @@ package onboard;
 public class OpenTile extends Tile{
 		
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Default constructor, assumes there is no piece on it.
 	 */
 	public OpenTile() {

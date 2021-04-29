@@ -19,6 +19,11 @@ public class BlockedTile extends Tile{
 		imgPath = "assets/BlockedTile.png";
 	}
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	/**
 	 * @return false
