@@ -124,5 +124,6 @@ public class StrategyGameModel extends Observable{
 		setChanged();
 		notifyObservers();
 	}
+
 	
 }	

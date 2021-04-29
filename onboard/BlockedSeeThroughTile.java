@@ -18,6 +18,12 @@ public class BlockedSeeThroughTile extends Tile{
 		imgPath="assets/BlockedSeeThroughTile.png";
 	}
 	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	/**
 	 * @return false

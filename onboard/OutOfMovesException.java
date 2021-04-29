@@ -12,6 +12,11 @@ package onboard;
  */
 public class OutOfMovesException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public OutOfMovesException(String string) {
 	}
 

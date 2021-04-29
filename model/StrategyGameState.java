@@ -25,4 +25,14 @@ public class StrategyGameState implements Serializable{
 	protected String backgroundImageFileName;
 	protected Tile[][] board;
 	
+	public StrategyGameState() {
+		
+	}
+	
+	public StrategyGameState(Team ct, String fn, Tile[][] b) {
+		currentTurn = ct;
+		backgroundImageFileName = fn;
+		board = b;
+	}
+	
 }

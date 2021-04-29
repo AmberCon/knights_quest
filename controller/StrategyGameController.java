@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import computer_player.ComputerPlayer;
 import model.StrategyGameModel;
 import model.Team;
 import onboard.FriendlyFireException;
@@ -148,6 +149,8 @@ public class StrategyGameController{
 	public Team getTurn() {
 		return model.getTurn();
 	}
+	
+
 	
 	/**
 	 * This method will simulate an attack for the game. The piece at the "by" coordinates will

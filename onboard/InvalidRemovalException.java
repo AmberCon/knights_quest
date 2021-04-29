@@ -12,6 +12,11 @@ package onboard;
  */
 public class InvalidRemovalException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public InvalidRemovalException(String string) {
 	}
 

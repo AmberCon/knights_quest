@@ -13,6 +13,11 @@ public class Knight extends Piece{
 	
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * Defines stats for the Knight class. These can easily be changed
 	 * without removing functionality from the overall game.
 	 * 
