@@ -25,6 +25,7 @@ import onboard.Tile;
 
 public class StrategyGameController{
 	StrategyGameModel model;
+	ComputerPlayer computer_player;
 
 	/**
 	 * This is the constructor for the controller.
@@ -33,6 +34,7 @@ public class StrategyGameController{
 	 */
 	public StrategyGameController(StrategyGameModel model) {
 		this.model = model;
+		computer_player = new ComputerPlayer(this, model);
 	}
 	
 	/**
@@ -271,9 +273,9 @@ public class StrategyGameController{
 		model.setUpNotifyObservers();
 	}
 	
-	//TODO
+	
 	public void computerTurn() {
-		
+		computer_player.makeMove();
 	}
 	
 	

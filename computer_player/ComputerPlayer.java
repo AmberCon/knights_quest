@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Stack;
 
 import controller.StrategyGameController;
@@ -32,7 +33,10 @@ public class ComputerPlayer{
 	
 	private StrategyGameController controller;
 	private StrategyGameModel model;
+	
 	private ArrayList<Piece> pieces;
+	private HashMap<Piece, Coordinate> pieceToCoord;
+	
 	private final int boardHeight;
 	private final int boardWidth;
 	
@@ -50,6 +54,9 @@ public class ComputerPlayer{
 	protected int shortestRow;
 	protected int shortestCol;
 	
+	//This field is for testing makeMove.
+	protected int piecesMoved;
+	
 	/**
 	 * Initializes the model, controller, constants for board height and width,
 	 * and gets references to each of the Computer Player's pieces.
@@ -62,7 +69,34 @@ public class ComputerPlayer{
 		this.model = model;
 		this.boardHeight = model.getBoardHeight();
 		this.boardWidth = model.getBoardWidth();
+		pieces = new ArrayList<Piece>();
+		pieceToCoord = new HashMap<Piece, Coordinate>();
 		this.getPieces();
+		
+		
+	}
+	
+	public void makeMove() {
+		HashSet<Integer> indicesSeen = new HashSet<Integer>();
+		piecesMoved = 0;
+		for(int i = 0; i<pieces.size(); i++) {
+			Piece currPiece = pieceDecider(indicesSeen);
+			Coordinate currLoc = pieceToCoord.get(currPiece);
+			moveTowardHumanPiece(currPiece, currLoc.row, currLoc.col);
+			piecesMoved++;
+		}
+	}
+	
+	private Piece pieceDecider(HashSet<Integer> indicesSeen) {
+		Random rand = new Random();
+		int randNum;
+		do {
+			randNum = rand.nextInt(pieces.size());
+		} while(indicesSeen.contains(randNum));
+		
+		indicesSeen.add(randNum);
+		
+		return pieces.get(randNum);
 	}
 	
 	
@@ -70,13 +104,14 @@ public class ComputerPlayer{
 	 * This method gets references to each of the Computer Player's pieces.
 	 */
 	private void getPieces() {
-		pieces = new ArrayList<Piece>();
+		
 		for(int row = 0; row<boardHeight; row++) {
 			for(int col = 0; col<boardWidth; col++) {
 				Tile tile = model.getTile(row, col);
 				Piece piece = tile.getPiece();
 				if(piece != null && piece.getTeam().equals(Team.COMPUTER)) {
 					pieces.add(piece);
+					pieceToCoord.put(piece, new Coordinate(row, col));
 				}
 			}
 		}
@@ -160,8 +195,8 @@ public class ComputerPlayer{
 			Coordinate nextMove = shortestPath.pop();
 			Tile toMove = coordToTile(nextMove.row, nextMove.col);
 
-			try {//TODO: Update this when the controller is tested
-				//controller.move(currRow, currCol, nextMove.row, nextMove.col);
+			try {
+				//controller.move(currRow, currCol, nextMove.row, nextMove.col);				
 				toMove.setPiece(piece);
 				piece.move(1);
 				currRow = nextMove.row;
@@ -175,7 +210,7 @@ public class ComputerPlayer{
 			} 
 		}
 		
-
+		pieceToCoord.put(piece, new Coordinate(currRow, currCol));
 		
 		//Pop until only the enemy's coordinates remains on the stack.
 		while(shortestPath.size() > 1) {

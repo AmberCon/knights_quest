@@ -18,7 +18,6 @@ public class ComputerPlayerTest{
 	 * This test shows that the shortest path from CPU position (1,4)
 	 * is Human position (4,1), distance 3. It is NOT human position (1,0), distance 4.
 	 */
-	
 	public void test_standardPath() { //i.e. with nothing blocking it.
 		StrategyGameModel m = null;
 		try {
@@ -151,11 +150,38 @@ public class ComputerPlayerTest{
 		StrategyGameController c = new StrategyGameController(m);
 		
 		ComputerPlayer cpu = new ComputerPlayer(c, m);
-		cpu.moveTowardHumanPiece(m.getTile(1, 4).getPiece(), 1, 4); 
+		
+		Piece p = m.getTile(1, 4).getPiece();
+		cpu.moveTowardHumanPiece(p, 1, 4); 
 		
 
 		
-		assertTrue(m.getTile(1, 4).getPiece().isDefended());
+		assertTrue(p.isDefended());
+	}
+	
+	@Test
+	/**
+	 * Basic test to test all pieces moving at once. This is better
+	 * tested alongside the view.
+	 */
+	public void test_makeMove() {
+		StrategyGameModel m = null;
+		try {
+			m = new StrategyGameModel("./computer_player/test_levels/blocked_allies.dat");
+		} catch (BadSaveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		StrategyGameController c = new StrategyGameController(m);
+		
+		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		
+		cpu.makeMove();
+		
+		assertEquals(cpu.piecesMoved, 6);
+		
+
+				
 	}
 	
 
