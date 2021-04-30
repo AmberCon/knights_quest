@@ -28,6 +28,7 @@ public abstract class Piece implements Serializable{
 	protected int moveDistanceRemaining;
 	
 	protected boolean isDefended;
+	protected boolean isRested;
 	protected boolean hasAttackedOrDefended;
 	
 	protected Team team;
@@ -82,8 +83,9 @@ public abstract class Piece implements Serializable{
 		
 		pieceToAttack.takeDamage(tileToAttack, damageDealt);
 		
-		
 		hasAttackedOrDefended = true;
+		isDefended = false;
+		isRested = false;
 	}
 	
 	/**
@@ -107,7 +109,11 @@ public abstract class Piece implements Serializable{
 		//Prevents from taking negative damage (and thus healing)
 		int damageTaken = Math.max(0, damage-damageDefended);
 		
-		health -= damageTaken;
+		if (isRested) { // If resting, damage is 50% more
+			health -= damageTaken * 1.5;
+		} else {
+			health -= damageTaken;
+		}
 		
 		if(health < 0) { //Kill this piece if health < 0
 			thisTile.removePiece(); //Point the tile to null, will get garbage collected
@@ -118,10 +124,19 @@ public abstract class Piece implements Serializable{
 	 * Indicates the piece has defended.
 	 */
 	public void defend() {
+		isRested = false;
 		isDefended = true;
 		hasAttackedOrDefended = true;
 	}
 	
+	/**
+	 * Indicates the piece has rested.
+	 */
+	public void rest() {
+		isDefended = false;
+		hasAttackedOrDefended = true;
+		isRested = true;
+	}
 	
 	/**
 	 * Subtracts moveDistanceRemaining if the number of moves is valid.
@@ -137,8 +152,8 @@ public abstract class Piece implements Serializable{
 		} else {
 			moveDistanceRemaining -= distance;
 		}
-		
-		
+		isDefended = false;
+		isRested = false;
 	}
 	
 	/**
@@ -158,6 +173,13 @@ public abstract class Piece implements Serializable{
 	 */
 	public boolean isDefended() {
 		return isDefended;
+	}
+	
+	/**
+	 * @return true if the piece is in rest state. false if not.
+	 */
+	public boolean isRested() {
+		return isRested;
 	}
 	
 	/**

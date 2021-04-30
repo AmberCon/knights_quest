@@ -48,6 +48,17 @@ public class StrategyGameController{
 	}
 	
 	/**
+	 * This method returns the background image for the tile at row, col.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return String : a background image path for the tile at row, col
+	 */
+	public String getTileBackground(int row, int col) {
+		return model.getTile(row, col).getImgPath();
+	}
+	
+	/**
 	 * This method returns the file name of the sprite for the piece at the given coordinates.
 	 * 
 	 * @param row The y axis coordinate of the board
@@ -137,6 +148,22 @@ public class StrategyGameController{
 			Tile tile = model.getTile(row, col);
 			Piece piece = tile.getPiece();
 			return piece.isDefended();
+		}
+		return false;
+	}
+	
+	/**
+	 * This method will return whether or not the piece at the coordinates is currently resting.
+	 * 
+	 * @param row The y axis coordinate of the board
+	 * @param col The x axis coordinate of the board
+	 * @return If the piece is currently resting.
+	 */
+	public boolean isRested(int row, int col) {
+		if(hasPlayer(row, col)) {
+			Tile tile = model.getTile(row, col);
+			Piece piece = tile.getPiece();
+			return piece.isRested();
 		}
 		return false;
 	}
@@ -257,7 +284,7 @@ public class StrategyGameController{
 	}
 	
 	/**
-	 * This method will cause the piece located at the specified coordinates defend.
+	 * This method will cause the piece located at the specified coordinates to defend.
 	 * 
 	 * @param row The y axis coordinate of the piece
 	 * @param col The x axis coordinate of the piece
@@ -267,6 +294,19 @@ public class StrategyGameController{
 			Tile tile = model.getTile(row, col);
 			Piece piece = tile.getPiece();
 			piece.defend();
+		}
+		model.setUpNotifyObservers();
+	}
+	
+	/**
+	 * This method will cause the piece located at the specified coordinates to rest.
+	 * 
+	 * @param row The y axis coordinate of the piece
+	 * @param col The x axis coordinate of the piece
+	 */
+	public void rest(int row, int col) {
+		if (hasPlayer(row, col) && !model.getTile(row, col).getPiece().hasAttackedOrDefended()) {
+			model.getTile(row, col).getPiece().rest();
 		}
 		model.setUpNotifyObservers();
 	}

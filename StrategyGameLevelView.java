@@ -114,14 +114,14 @@ public class StrategyGameLevelView implements Observer {
 	 * Sets up the board
 	 */
 	private void setBoard() {
-		Image mapBackground = new Image(controller.getBackgroundImageFileName());
+		map = new GridPane();
+		Image mapBackground = new Image("assets/custom_background.png");
+		if (!controller.getBackgroundImageFileName().equals("custom")) {
+			mapBackground = new Image(controller.getBackgroundImageFileName());
+		}
+		
 		mapWidthPixel = (int) mapBackground.getWidth();
 		mapHeightPixel = (int) mapBackground.getHeight();
-		this.message.setText("");
-		VBox center = new VBox();
-		center.setPrefSize(mapWidthPixel, mapHeightPixel);
-		center.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-		map = new GridPane();
 		map.setAlignment(Pos.BASELINE_CENTER);
 		map.setPrefSize(mapWidthPixel, mapHeightPixel);;
 		map.setBackground(new Background(new BackgroundImage(mapBackground,
@@ -129,6 +129,11 @@ public class StrategyGameLevelView implements Observer {
 							BackgroundRepeat.NO_REPEAT, 
 							BackgroundPosition.CENTER, 
 							BackgroundSize.DEFAULT)));
+		this.message.setText("");
+		VBox center = new VBox();
+		center.setPrefSize(mapWidthPixel, mapHeightPixel);
+		center.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		
 		
 		for (int row = 0; row < controller.getBoardLength(); row++) {
 			for (int col = 0; col < controller.getBoardWidth(); col++) {
@@ -162,13 +167,25 @@ public class StrategyGameLevelView implements Observer {
 				   BorderStrokeStyle.SOLID,
 				   CornerRadii.EMPTY,
 				   new BorderWidths(1,1,1,1))));
-		tile.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+		if (controller.getBackgroundImageFileName().equals("custom")) {
+			tile.setBackground(new Background(new BackgroundImage(new Image(controller.getTileBackground(row, col)), 
+					BackgroundRepeat.NO_REPEAT, 
+					BackgroundRepeat.NO_REPEAT, 
+					BackgroundPosition.DEFAULT, 
+					new BackgroundSize(100, 100, true, true, false, true))));
+		} else {
+			tile.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+		
 		tile.setAlignment(Pos.BOTTOM_CENTER);
 		
 		if (controller.hasPlayer(row, col)) {
 			
 			if (controller.isDefended(row, col)) {
 				tile.setBackground(new Background(new BackgroundFill(Color.GREEN, CornerRadii.EMPTY, Insets.EMPTY)));
+			}
+			if (controller.isRested(row, col)) {
+				tile.setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
 			}
 			
 			if (controller.getPieceTeam(row, col) == controller.getTurn() && withEventFilters) {
@@ -189,7 +206,11 @@ public class StrategyGameLevelView implements Observer {
 				move.setOnAction((event) -> {
 						showMoves(pieceRow, pieceCol);
 					});
-				onClickMenu.getItems().addAll(attack, defend, move);
+				MenuItem rest = new MenuItem("Rest");
+				rest.setOnAction((event) -> {
+						controller.rest(pieceRow, pieceCol);
+					});
+				onClickMenu.getItems().addAll(attack, defend, move, rest);
 				
 				EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
 			        @Override 
@@ -224,6 +245,9 @@ public class StrategyGameLevelView implements Observer {
 		    sprite.setFitWidth(tileWidth);
 		    sprite.setFitHeight(tileHeight * 5/6);
 		    sprite.setPreserveRatio(true);
+		    if (controller.getMoveDistanceRemaining(row, col) <= 0) {
+		    	sprite.setOpacity(0.5);
+		    }
 			tile.add(sprite, 0, 0);
 			GridPane.setHalignment(sprite, HPos.CENTER);
 			
