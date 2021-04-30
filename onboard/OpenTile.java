@@ -34,18 +34,6 @@ public class OpenTile extends Tile{
 		super.piece = piece;
 	}
 	
-	@Override
-	/**
-	 * @return false if there is a player on the piece. true
-	 * if not.
-	 */
-	public boolean canMoveInto() {
-		if(super.hasPlayer()) {
-			return false;
-		}
-		
-		return true;
-	}
 
 	@Override
 	/**

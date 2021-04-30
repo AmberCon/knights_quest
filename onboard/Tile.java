@@ -39,7 +39,7 @@ public abstract class Tile implements Serializable{
 	 * the tile at this particular time.
 	 */
 	public void setPiece(Piece newPiece) throws InvalidMoveException {
-		if(this.canMoveInto()) {
+		if(this.canMoveInto(newPiece)) {
 			this.piece = newPiece;
 		} else {
 			throw new InvalidMoveException("Can't move the piece there! Either an invalid tile or a piece is already there");
@@ -74,12 +74,13 @@ public abstract class Tile implements Serializable{
 	}
 	
 	/**
-	 * Abstract method for determining if a piece can move into it.
-	 * 
-	 * @return false if either a Blocked tile or if a piece is occupying
-	 * it. true otherwise.
+	 * Returns whether the piece p can move into the given tile
+	 * @param p - the piece attempting to move into the tile
+	 * @return - Whether p can move into the tile, as a boolean
 	 */
-	public abstract boolean canMoveInto();
+	public boolean canMoveInto(Piece p) {
+		return piece==null;
+	}
 	
 	/**
 	 * Abstract method for determining if a piece can move into it.

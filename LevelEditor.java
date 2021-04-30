@@ -10,6 +10,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -26,12 +28,15 @@ import model.LevelEditorModel;
 import model.SaveFailureException;
 import model.Team;
 import onboard.Archer;
+import onboard.ArmoredKnight;
 import onboard.BlockedSeeThroughTile;
 import onboard.BlockedTile;
+import onboard.Horseman;
 import onboard.InvalidMoveException;
 import onboard.InvalidRemovalException;
 import onboard.Knight;
 import onboard.OpenTile;
+import onboard.Pegasus;
 import onboard.Piece;
 import onboard.Tile;
 
@@ -55,7 +60,10 @@ public class LevelEditor {
 	};
 	private static final Piece[] PIECE_SAMPLES = new Piece[] {
 		new Knight(Team.HUMAN), new Knight(Team.COMPUTER),
-		new Archer(Team.HUMAN), new Archer(Team.COMPUTER)	
+		new Archer(Team.HUMAN), new Archer(Team.COMPUTER),
+		new Horseman(Team.HUMAN), new Horseman(Team.COMPUTER),
+		new ArmoredKnight(Team.HUMAN), new ArmoredKnight(Team.COMPUTER),
+		new Pegasus(Team.HUMAN), new Pegasus(Team.COMPUTER)
 	};
 	private static final String NULL_TILE_IMG_PATH = "assets/NullTile.png";
 	
@@ -164,6 +172,11 @@ public class LevelEditor {
 	 */
 	private void initPiecesBar() {
 		//TODO Encapsulate with scrollpane if we get that many pieces
+		ScrollPane scroller = new ScrollPane();
+		scroller.setHbarPolicy(ScrollBarPolicy.NEVER);
+		scroller.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		scroller.setPrefHeight(100);
+		scroller.setPrefWidth(100);
 		VBox piecesBar = new VBox();
 		
 		
@@ -176,8 +189,8 @@ public class LevelEditor {
 			makeSpSelectable(sp, p);
 			piecesBar.getChildren().add(sp);
 		}
-		
-		root.setLeft(piecesBar);
+		scroller.setContent(piecesBar);
+		root.setLeft(scroller);
 	}
 	
 	/**
