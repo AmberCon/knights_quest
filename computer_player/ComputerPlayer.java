@@ -69,14 +69,19 @@ public class ComputerPlayer{
 		this.model = model;
 		this.boardHeight = model.getBoardHeight();
 		this.boardWidth = model.getBoardWidth();
-		pieces = new ArrayList<Piece>();
-		pieceToCoord = new HashMap<Piece, Coordinate>();
-		this.getPieces();
+
+		
 		
 		
 	}
 	
+	/**
+	 * This method loops through all pieces and calls the functions
+	 * necessary to move all of them.
+	 */
 	public void makeMove() {
+		this.getPieces();
+		
 		HashSet<Integer> indicesSeen = new HashSet<Integer>();
 		piecesMoved = 0;
 		for(int i = 0; i<pieces.size(); i++) {
@@ -87,6 +92,19 @@ public class ComputerPlayer{
 		}
 	}
 	
+	/**
+	 * This method generates a random integer between 0
+	 * and the number of pieces on the board - 1. It does
+	 * this until a unique number has been generated for this turn.
+	 * It then gets the proper Piece object based on this index
+	 * from the ArrayList.
+	 * 
+	 * @param indicesSeen is a HashSet of integers representing
+	 * the indices already seen for this turn. This ensures
+	 * that the computer player moves all its pieces.
+	 * 
+	 * @return a random Piece object from the pieces ArrayList
+	 */
 	private Piece pieceDecider(HashSet<Integer> indicesSeen) {
 		Random rand = new Random();
 		int randNum;
@@ -104,7 +122,8 @@ public class ComputerPlayer{
 	 * This method gets references to each of the Computer Player's pieces.
 	 */
 	private void getPieces() {
-		
+		pieces = new ArrayList<Piece>();
+		pieceToCoord = new HashMap<Piece, Coordinate>();
 		for(int row = 0; row<boardHeight; row++) {
 			for(int col = 0; col<boardWidth; col++) {
 				Tile tile = model.getTile(row, col);
