@@ -47,7 +47,7 @@ public class StrategyGameModel extends Observable{
 				new ObjectInputStream(new FileInputStream(filename));){
 			StrategyGameState state = (StrategyGameState) objIn.readObject();
 			this.state = state;
-			if(this.state == null || this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
+			if(this.state == null || this.state.board == null|| this.getBoardHeight() == 0 || this.getBoardWidth() == 0) {
 				throw new BadSaveException();
 			}
 		} catch (IOException | ClassNotFoundException | ClassCastException e) {
