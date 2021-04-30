@@ -246,7 +246,7 @@ public class StrategyGameLevelView implements Observer {
 		    sprite.setFitHeight(tileHeight * 5/6);
 		    sprite.setPreserveRatio(true);
 		    if (controller.getMoveDistanceRemaining(row, col) <= 0) {
-		    	sprite.setOpacity(0.7);
+		    	sprite.setOpacity(0.5);
 		    }
 			tile.add(sprite, 0, 0);
 			GridPane.setHalignment(sprite, HPos.CENTER);
