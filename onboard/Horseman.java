@@ -54,5 +54,9 @@ public class Horseman extends Piece{
 	public void resetTurn() {
 		moveDistanceRemaining = 5;
 		hasAttackedOrDefended = false;
+		if (isRested) {
+			health += Math.floor(Math.random()*(6)+5); // add between 5 and 10 health to character
+			health = Math.min(health, 100);
+		}
 	}
 }

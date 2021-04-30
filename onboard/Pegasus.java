@@ -54,6 +54,10 @@ public class Pegasus extends Flyer {
 	public void resetTurn() {
 		moveDistanceRemaining = 3;
 		hasAttackedOrDefended = false;
+		if (isRested) {
+			health += Math.floor(Math.random()*(6)+5); // add between 5 and 10 health to character
+			health = Math.min(health, 100);
+		}
 	}
 
 }
