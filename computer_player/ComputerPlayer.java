@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Stack;
 
 import controller.StrategyGameController;
@@ -32,7 +33,10 @@ public class ComputerPlayer{
 	
 	private StrategyGameController controller;
 	private StrategyGameModel model;
+	
 	private ArrayList<Piece> pieces;
+	private HashMap<Piece, Coordinate> pieceToCoord;
+	
 	private final int boardHeight;
 	private final int boardWidth;
 	
@@ -50,6 +54,9 @@ public class ComputerPlayer{
 	protected int shortestRow;
 	protected int shortestCol;
 	
+	//This field is for testing makeMove.
+	protected int piecesMoved;
+	
 	/**
 	 * Initializes the model, controller, constants for board height and width,
 	 * and gets references to each of the Computer Player's pieces.
@@ -62,7 +69,52 @@ public class ComputerPlayer{
 		this.model = model;
 		this.boardHeight = model.getBoardHeight();
 		this.boardWidth = model.getBoardWidth();
+
+		
+		
+		
+	}
+	
+	/**
+	 * This method loops through all pieces and calls the functions
+	 * necessary to move all of them.
+	 */
+	public void makeMove() {
 		this.getPieces();
+		
+		HashSet<Integer> indicesSeen = new HashSet<Integer>();
+		piecesMoved = 0;
+		for(int i = 0; i<pieces.size(); i++) {
+			Piece currPiece = pieceDecider(indicesSeen);
+			Coordinate currLoc = pieceToCoord.get(currPiece);
+			moveTowardHumanPiece(currPiece, currLoc.row, currLoc.col);
+			piecesMoved++;
+		}
+	}
+	
+	/**
+	 * This method generates a random integer between 0
+	 * and the number of pieces on the board - 1. It does
+	 * this until a unique number has been generated for this turn.
+	 * It then gets the proper Piece object based on this index
+	 * from the ArrayList.
+	 * 
+	 * @param indicesSeen is a HashSet of integers representing
+	 * the indices already seen for this turn. This ensures
+	 * that the computer player moves all its pieces.
+	 * 
+	 * @return a random Piece object from the pieces ArrayList
+	 */
+	private Piece pieceDecider(HashSet<Integer> indicesSeen) {
+		Random rand = new Random();
+		int randNum;
+		do {
+			randNum = rand.nextInt(pieces.size());
+		} while(indicesSeen.contains(randNum));
+		
+		indicesSeen.add(randNum);
+		
+		return pieces.get(randNum);
 	}
 	
 	
@@ -71,12 +123,14 @@ public class ComputerPlayer{
 	 */
 	private void getPieces() {
 		pieces = new ArrayList<Piece>();
+		pieceToCoord = new HashMap<Piece, Coordinate>();
 		for(int row = 0; row<boardHeight; row++) {
 			for(int col = 0; col<boardWidth; col++) {
 				Tile tile = model.getTile(row, col);
 				Piece piece = tile.getPiece();
 				if(piece != null && piece.getTeam().equals(Team.COMPUTER)) {
 					pieces.add(piece);
+					pieceToCoord.put(piece, new Coordinate(row, col));
 				}
 			}
 		}
@@ -160,8 +214,8 @@ public class ComputerPlayer{
 			Coordinate nextMove = shortestPath.pop();
 			Tile toMove = coordToTile(nextMove.row, nextMove.col);
 
-			try {//TODO: Update this when the controller is tested
-				//controller.move(currRow, currCol, nextMove.row, nextMove.col);
+			try {
+				//controller.move(currRow, currCol, nextMove.row, nextMove.col);				
 				toMove.setPiece(piece);
 				piece.move(1);
 				currRow = nextMove.row;
@@ -175,7 +229,7 @@ public class ComputerPlayer{
 			} 
 		}
 		
-
+		pieceToCoord.put(piece, new Coordinate(currRow, currCol));
 		
 		//Pop until only the enemy's coordinates remains on the stack.
 		while(shortestPath.size() > 1) {
