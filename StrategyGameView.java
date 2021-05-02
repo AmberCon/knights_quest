@@ -119,7 +119,7 @@ public class StrategyGameView extends Application {
 					startLevelEditor();
 			});
 		
-		Button displayRules = new Button("Piece Info");
+		Button displayRules = new Button("Help");
 		displayRules.setPrefSize(200, 60);
 		displayRules.setStyle("-fx-font-size:20");
 		displayRules.setOnAction((event) -> {
@@ -468,8 +468,12 @@ public class StrategyGameView extends Application {
 		
 		// Pieces
 		ScrollPane rules = new ScrollPane();
-		rules.setContent(new ImageView("assets/rules.png"));
+		ImageView rulesImage = new ImageView("assets/rules.png");
+		rulesImage.setFitWidth(550);
+		rulesImage.setPreserveRatio(true);
+		rules.setContent(rulesImage);
 		rules.setMinHeight(500);
+		rules.setPrefWidth(550);
 		
 		// Back to main menu
 		Button backToMain = new Button("Main Menu");
