@@ -30,12 +30,12 @@ public class Archer extends Piece{
 		attackRange[0] = 10; //Minimum attack is 10
 		attackRange[1] = 15; //Maximum attack is 15
 		
-		attackDistance = 3;
+		attackDistance = 2;
 		
 		defenseRange[0] = 5; //Can defend at least 5 damage
 		defenseRange[1] = 10; //Can defend at most 10 damage
 		
-		moveDistanceRemaining = 3;
+		moveDistanceRemaining = 2;
 		
 		isDefended = false;
 		hasAttackedOrDefended = false;

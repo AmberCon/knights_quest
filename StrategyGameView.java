@@ -14,6 +14,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -555,6 +556,7 @@ public class StrategyGameView extends Application {
 		
 		Scene game = new Scene(gameWindow, dimensions[0]+50, dimensions[1]+50);
 		stage.setScene(game);
+		displayLevelIntro(levelFileName);
 	}
 	
 	/**
@@ -695,6 +697,47 @@ public class StrategyGameView extends Application {
 		badSaveAlert.showAndWait();
 	}
 	
+	/**
+	 * Displays the level intro for a given level (or none if not applicable)
+	 * 
+	 * @param : a string representing the name of the current level
+	 */
+	public void displayLevelIntro(String levelName) {
+		Alert introAlert = new Alert(Alert.AlertType.INFORMATION);
+		
+		if (levelName.endsWith("level_1.dat")) {
+			introAlert.setTitle("Level 1");
+			introAlert.setHeaderText("Level 1");
+			introAlert.setContentText("There are only two ways across the river.\n"
+					+ "Whoever controls the bridges, controls the map.");
+			introAlert.showAndWait();
+		} else if (levelName.endsWith("level_2.dat")) {
+			introAlert.setTitle("Level 2");
+			introAlert.setHeaderText("Level 2");
+			introAlert.setContentText("The enemy is holed up in their ruined castle.\n"
+					+ "Trap them inside!");
+			introAlert.showAndWait();
+		} else if (levelName.endsWith("level_3.dat")) {
+			introAlert.setTitle("Level 3");
+			introAlert.setHeaderText("Level 3");
+			introAlert.setContentText("You are outnumbered, but the enemy is slow.\n"
+					+ "Use your more mobile pieces to your advantage.");
+			introAlert.showAndWait();
+		} else if (levelName.endsWith("level_4.dat")) {
+			introAlert.setTitle("Level 4");
+			introAlert.setHeaderText("Level 4");
+			introAlert.setContentText("You are outnumbered on an island with very few paths.\n"
+					+ "Use your flying piece to your advantage to keep the enemy from cornering you.");
+			introAlert.showAndWait();
+		} else if (levelName.endsWith("level_5.dat")) {
+			introAlert.setTitle("Level 5");
+			introAlert.setHeaderText("Level 5");
+			introAlert.setContentText("An enemy approaches your castle, but you are outnumbered.\n"
+					+ "Use your pieces wisely to defeat the invading army.");
+			introAlert.showAndWait();
+		}
+
+	}
 	
 	/**
 	 * Returns the name of the next level.
@@ -780,6 +823,8 @@ public class StrategyGameView extends Application {
 	
 	/**
 	 * Returns of list of all custom level file names
+	 * 
+	 * @return list of strings: a list of all custom level file names available
 	 */
 	private List<String> getCustomLevels() {
 		List<String> levelNames = new ArrayList<String>();

@@ -34,7 +34,7 @@ public class Horseman extends Piece{
 		defenseRange[0] = 10; //Can defend as little as 10 damage
 		defenseRange[1] = 20; //Can defend as high as 20 damage
 		
-		moveDistanceRemaining = 5; //Can moves 5 tiles per turn - very mobile character
+		moveDistanceRemaining = 3; //Can moves 3 tiles per turn - very mobile character
 		
 		isDefended = false;
 		hasAttackedOrDefended = false;
