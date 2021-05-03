@@ -16,6 +16,7 @@ import onboard.FriendlyFireException;
 import onboard.InvalidMoveException;
 import onboard.InvalidRemovalException;
 import onboard.OutOfMovesException;
+import onboard.Pegasus;
 import onboard.Piece;
 import onboard.Tile;
 
@@ -70,7 +71,7 @@ public class ComputerPlayer{
 		this.boardHeight = model.getBoardHeight();
 		this.boardWidth = model.getBoardWidth();
 
-		
+		pieceToCoord = new HashMap<Piece, Coordinate>();
 		
 		
 	}
@@ -199,7 +200,7 @@ public class ComputerPlayer{
 	 */
 	protected void moveTowardHumanPiece(Piece piece, int compPieceRow, int compPieceCol) {
 
-		Stack<Coordinate> shortestPath = shortestPath(compPieceRow, compPieceCol);
+		Stack<Coordinate> shortestPath = shortestPath(compPieceRow, compPieceCol, piece);
 		
 		//This will probably never happen
 		if(shortestPath == null) {
@@ -210,27 +211,30 @@ public class ComputerPlayer{
 		int currRow = compPieceRow;
 		int currCol = compPieceCol;
 		
-		while(shortestPath.size() > piece.getAttackDistance() ) {
+		while(shortestPath.size() > piece.getAttackDistance() 
+				&& piece.getMoveDistanceRemaining() > 0) {
 			Coordinate nextMove = shortestPath.pop();
 			Tile toMove = coordToTile(nextMove.row, nextMove.col);
+			Tile prevMove = coordToTile(currRow, currCol);
 
-			try {
-				//controller.move(currRow, currCol, nextMove.row, nextMove.col);				
-				toMove.setPiece(piece);
-				piece.move(1);
-				currRow = nextMove.row;
-				currCol = nextMove.col;
+			//controller.move(currRow, currCol, nextMove.row, nextMove.col);				
+			prevMove.removeComputerPiece();
+			toMove.setComputerPiece(piece);
+			currRow = nextMove.row;
+			currCol = nextMove.col;
+			piece.moveComputer(1);
 				
-			//OutOfMoves will happen if not in the attack range. InvalidMove could happen
-			//If there is a piece blocking the computer piece's path.
-			} catch (InvalidMoveException | OutOfMovesException e) {
-				controller.defend(currRow, currCol);
-				return;
-			} 
+			
 		}
-		
+				
 		pieceToCoord.put(piece, new Coordinate(currRow, currCol));
 		
+		if(shortestPath.size() > piece.getAttackDistance() ) {
+			controller.defend(currRow, currCol);
+			return;
+		}
+		
+	
 		//Pop until only the enemy's coordinates remains on the stack.
 		while(shortestPath.size() > 1) {
 			shortestPath.pop();
@@ -263,7 +267,7 @@ public class ComputerPlayer{
 	 * @return The shortest path from the computer piece's coordinates
 	 * to the nearest human piece's coordinates as a Stack.
 	 */
-	private Stack<Coordinate> shortestPath(int fromRow, int fromCol) {
+	private Stack<Coordinate> shortestPath(int fromRow, int fromCol, Piece piece) {
 		
 		Queue<Coordinate> q = new LinkedList<Coordinate>();
 		HashSet<Coordinate> coordinatesVisited = new HashSet<Coordinate>();
@@ -291,7 +295,8 @@ public class ComputerPlayer{
 				Tile tile = coordToTile(adjacent.row, adjacent.col);
 				
 				//If out of bounds or already visited 
-				if(tile == null  || !(tile.isOpenTile())|| coordinatesVisited.contains(adjacent)) {
+				if(tile == null  || (!(tile.isOpenTile()) || piece instanceof Pegasus)
+						|| coordinatesVisited.contains(adjacent)) {
 					continue;
 				} 
 				

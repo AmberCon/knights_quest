@@ -156,6 +156,12 @@ public abstract class Piece implements Serializable{
 		isRested = false;
 	}
 	
+	public void moveComputer(int distance) {
+		moveDistanceRemaining -= distance;
+		isDefended = false;
+		isRested = false;
+	}
+	
 	/**
 	 * Conditions to reset turn, varying from piece to piece.
 	 */

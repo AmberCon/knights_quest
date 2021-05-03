@@ -37,12 +37,14 @@ public class ComputerPlayerTest{
 		StrategyGameController c = new StrategyGameController(m);
 		
 		ComputerPlayer cpu = new ComputerPlayer(c, m);
-		cpu.moveTowardHumanPiece(m.getTile(1, 4).getPiece(), 1, 4); 
+		
+		Piece p = m.getTile(1, 4).getPiece();
+		cpu.moveTowardHumanPiece(p, 1, 4); 
 		
 		assertEquals(cpu.shortestRow, 4);
 		assertEquals(cpu.shortestCol, 1);
 		
-		assertTrue(m.getTile(1, 4).getPiece().isDefended());
+		assertTrue(p.isDefended());
 	}
 	
 	@Test
@@ -185,7 +187,7 @@ public class ComputerPlayerTest{
 		Piece p = m.getTile(1, 4).getPiece();
 		cpu.moveTowardHumanPiece(p, 1, 4); 
 		
-
+		System.out.println(p.hasAttackedOrDefended());
 		
 		assertTrue(p.isDefended());
 	}

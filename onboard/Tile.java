@@ -62,6 +62,15 @@ public abstract class Tile implements Serializable{
 		
 	}
 	
+	public void removeComputerPiece() {
+		this.piece = null;
+	}
+	
+	public void setComputerPiece(Piece newPiece) {
+		this.piece = newPiece;
+	
+	}
+	
 	/**
 	 * @return true if the Tile has a player there. false if not.
 	 */
