@@ -222,6 +222,11 @@ public class ComputerPlayer{
 			Coordinate nextMove = shortestPath.pop();
 			Tile toMove = coordToTile(nextMove.row, nextMove.col);
 			Tile prevMove = coordToTile(currRow, currCol);
+			
+			if(!toMove.canMoveInto(piece) || 
+					(nextMove.row == currRow && currCol == nextMove.col)) {
+				break;
+			}
 
 			prevMove.removeComputerPiece();
 			toMove.setComputerPiece(piece);
