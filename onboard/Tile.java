@@ -54,11 +54,10 @@ public abstract class Tile implements Serializable{
 	 * @throws InvalidRemovalException
 	 */
 	public void removePiece() throws InvalidRemovalException {
-		if(isOpenTile()) {
-			this.piece = null;
-		} else {
-			throw new InvalidRemovalException("Can't remove the piece from a Blocked tile!");
+		if(!(this.piece instanceof Flyer || this instanceof OpenTile)) {
+			throw new InvalidRemovalException("Can't remove piece from this tile");
 		}
+		this.piece = null;
 		
 	}
 	
