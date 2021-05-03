@@ -53,6 +53,7 @@ public class ArmoredKnight extends Piece {
 	@Override
 	public void resetTurn() {
 		moveDistanceRemaining = 1;
+		isDefended = false;
 		hasAttackedOrDefended = false;
 		if (isRested) {
 			health += Math.floor(Math.random()*(6)+5); // add between 5 and 10 health to character

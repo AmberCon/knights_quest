@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import controller.StrategyGameController;
 import model.BadSaveException;
 import model.StrategyGameModel;
+import onboard.Flyer;
 import onboard.Piece;
 
 /**
@@ -34,9 +35,8 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		
 		Piece p = m.getTile(1, 4).getPiece();
 		cpu.moveTowardHumanPiece(p, 1, 4); 
@@ -61,9 +61,8 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		cpu.moveTowardHumanPiece(m.getTile(2, 2).getPiece(), 2, 2); 
 		
 		assertEquals(cpu.shortestRow, 0);
@@ -86,9 +85,8 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		Piece attacker = m.getTile(2, 3).getPiece();
 		cpu.moveTowardHumanPiece(attacker, 2, 3); 
 		
@@ -127,9 +125,8 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		Piece attacker = m.getTile(0, 4).getPiece();
 		cpu.moveTowardHumanPiece(attacker, 0, 4); 
 		
@@ -154,9 +151,9 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		cpu.moveTowardHumanPiece(m.getTile(1, 4).getPiece(), 1, 4); 
 		
 		
@@ -180,14 +177,12 @@ public class ComputerPlayerTest{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		
 		Piece p = m.getTile(1, 4).getPiece();
 		cpu.moveTowardHumanPiece(p, 1, 4); 
 		
-		System.out.println(p.hasAttackedOrDefended());
 		
 		assertTrue(p.isDefended());
 	}
@@ -204,9 +199,8 @@ public class ComputerPlayerTest{
 		} catch (BadSaveException e) {
 			e.printStackTrace();
 		}
-		StrategyGameController c = new StrategyGameController(m);
 		
-		ComputerPlayer cpu = new ComputerPlayer(c, m);
+		ComputerPlayer cpu = new ComputerPlayer(m);
 		
 		cpu.makeMove();
 		
@@ -214,6 +208,36 @@ public class ComputerPlayerTest{
 		
 
 				
+	}
+	
+	@Test
+	/**
+	 * This method tests a clear choice for the pegasus. A human Knight is 3
+	 * squares away, on a track of no blocked tiles. A human pegasus is 2 
+	 * sqyares away on a track with a blocked tile. The computer pegasus should
+	 * move through the blocked tile.
+	 */
+	public void test_Pegasus() {
+		StrategyGameModel m = null;
+		try {
+			m = new StrategyGameModel("./computer_player/test_levels/pegasus.dat");
+		} catch (BadSaveException e) {
+			e.printStackTrace();
+		}
+		
+		ComputerPlayer cpu = new ComputerPlayer(m);
+		
+		Piece p = m.getTile(2, 4).getPiece();
+
+		cpu.moveTowardHumanPiece(p, 2, 4); 
+		
+		assertEquals(cpu.shortestRow, 0);
+		assertEquals(cpu.shortestCol, 4);
+		
+		assertFalse(p.isDefended());
+		
+		assertTrue(p.hasAttackedOrDefended());
+		
 	}
 	
 

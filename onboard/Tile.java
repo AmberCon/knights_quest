@@ -88,7 +88,7 @@ public abstract class Tile implements Serializable{
 	 * @return - Whether p can move into the tile, as a boolean
 	 */
 	public boolean canMoveInto(Piece p) {
-		return piece==null;
+		return piece==null; 
 	}
 	
 	/**
