@@ -15,6 +15,7 @@ import onboard.FriendlyFireException;
 import onboard.InvalidMoveException;
 import onboard.InvalidRemovalException;
 import onboard.OutOfMovesException;
+import onboard.Pegasus;
 import onboard.Piece;
 import onboard.Tile;
 /**
@@ -339,8 +340,6 @@ public class StrategyGameController{
 		return possible;
 	}
 	
-	// Currently range attacks dont have to follow a straight line, will change later
-	// Ranged attackers can currently shoot through anything, will change later
 	/**
 	 * This method is a helper method for getValidAttacks(). This method will populate a list
 	 * of coordinates that the piece is able to attack.
@@ -352,12 +351,18 @@ public class StrategyGameController{
 	 * @param possible A list of the coordinates the piece can attack
 	 */
 	private void getValidAttacksHelper(int row, int col, int range, Team team, List<int[]> possible) {
+		boolean pegasus = false;
 		int width = getBoardWidth();
 		int length = getBoardLength();
 		// If the row and col are valid
 		if((row >= 0) && (row < length) && (col >= 0) && (col < width)) {
+			if(model.getTile(row, col).hasPlayer()) {
+				if(model.getTile(row, col).getPiece() instanceof Pegasus) {
+					pegasus = true;
+				}
+			}
 			// If the tile is able to be shot through
-			if(model.getTile(row, col).canShootThrough()) {
+			if(model.getTile(row, col).canShootThrough() | pegasus) {
 				if(model.getTile(row, col).hasPlayer()) {
 					if(!model.getTile(row, col).getPiece().getTeam().equals(team)) {
 						int[] coord = {row, col};
