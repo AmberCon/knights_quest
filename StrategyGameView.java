@@ -94,7 +94,7 @@ public class StrategyGameView extends Application {
 		GridPane center = new GridPane();
 		
 		// Title
-		Text title = new Text("Strategy Game");
+		Text title = new Text("Knight's Quest");
 		title.setFont(Font.font("Palatino", 80));
 		title.setFill(Color.ANTIQUEWHITE);
 		
@@ -798,6 +798,10 @@ public class StrategyGameView extends Application {
 			completedLevelScanner = new Scanner(completedLevelFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}
+		if (!completedLevelScanner.hasNext()) {
+			unlockedLevels.add(1);
+			return unlockedLevels;
 		}
 		String[] completedLevels = completedLevelScanner.next().strip().split(",");
 		int levelNum = 0;
