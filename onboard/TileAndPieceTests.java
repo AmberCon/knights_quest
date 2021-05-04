@@ -249,11 +249,82 @@ public class TileAndPieceTests{
 		assertEquals(((Knight)humanKnight1).health, humanKnight1.getHealth());
 		assertEquals(humanKnight1.getSpriteFileName(), "assets/knight_HUMAN.png");
 		assertEquals(((Knight)humanKnight1).moveDistanceRemaining, humanKnight1.getMoveDistanceRemaining());
+			
+	}
+	
+	@Test
+	/**
+	 * Tests the rest action
+	 */
+	public void testRest() throws InvalidMoveException, InvalidRemovalException, OutOfMovesException, FriendlyFireException {
+		Tile[][] testGrid = test_placePieces(); 
+		
+		Piece humanKnight2 = testGrid[0][1].getPiece();
+		
+		int knightMaxHealth = humanKnight2.getHealth();
+		
+		Piece computerArcher = testGrid[1][2].getPiece();
 		
 		
-
+		humanKnight2.rest();
+		computerArcher.attack(testGrid[0][1]);
+		assertTrue(humanKnight2.isRested());
 		
 		
+		assertTrue(humanKnight2.getHealth() >= knightMaxHealth 
+				- Math.max(0, (computerArcher.attackRange[1])*1.5)
+						
+				&& humanKnight2.getHealth() <= knightMaxHealth 
+				- Math.max(0, (computerArcher.attackRange[0])*1.5) );
+		
+	}
+	
+	@Test
+	/**
+	 * Test the setTeam() method for pieces
+	 */
+	public void testSetTeam() {
+		Knight k = new Knight(Team.HUMAN);
+		assertEquals(Team.HUMAN, k.getTeam());
+		k.setTeam(Team.COMPUTER);
+		assertEquals(Team.COMPUTER, k.getTeam());
+		k.setTeam(Team.COMPUTER);
+		assertEquals(Team.COMPUTER, k.getTeam());
+		k.setTeam(Team.HUMAN);
+		assertEquals(Team.HUMAN, k.getTeam());
+	}
+	
+	/**
+	 * Tests to make sure that the rest action heals the given piece
+	 * @param p The piece to test the rest action on
+	 * @throws InvalidMoveException 
+	 * @throws InvalidRemovalException 
+	 * @throws FriendlyFireException 
+	 */
+	private void testRestOnPiece(Piece p ) throws InvalidMoveException, FriendlyFireException, InvalidRemovalException {
+		p.setTeam(Team.HUMAN);
+		p.resetTurn();
+		OpenTile t = new OpenTile();
+		t.setPiece(p);
+		Archer a = new Archer(Team.COMPUTER);
+		a.attack(t);
+		
+		int oldHp = p.getHealth();
+		p.rest();
+		p.resetTurn();
+		assertTrue(p.getHealth()>oldHp);
+	}
+	
+	@Test
+	/**
+	 * Tests for rest healing various pieces
+	 */
+	public void testRestOnPieces() throws InvalidMoveException, FriendlyFireException, InvalidRemovalException {
+		testRestOnPiece(new Knight(Team.HUMAN));
+		testRestOnPiece(new Archer(Team.HUMAN));
+		testRestOnPiece(new ArmoredKnight(Team.HUMAN));
+		testRestOnPiece(new Pegasus(Team.HUMAN));
+		testRestOnPiece(new Horseman(Team.HUMAN));
 	}
 	
 
