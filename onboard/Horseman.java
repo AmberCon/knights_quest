@@ -52,7 +52,7 @@ public class Horseman extends Piece{
 	 */
 	@Override
 	public void resetTurn() {
-		moveDistanceRemaining = 5;
+		moveDistanceRemaining = 3;
 		isDefended = false;
 		hasAttackedOrDefended = false;
 		if (isRested) {
