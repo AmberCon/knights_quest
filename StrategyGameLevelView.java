@@ -194,6 +194,7 @@ public class StrategyGameLevelView implements Observer {
 				final int pieceCol = col;
 				ContextMenu onClickMenu = new ContextMenu();
 				MenuItem attack = new MenuItem("Attack");
+				attack.setDisable(controller.hasAttackedOrDefended(row, col));
 				attack.setOnAction((event) -> {
 						showAttacks(pieceRow, pieceCol);
 					});
@@ -202,14 +203,17 @@ public class StrategyGameLevelView implements Observer {
 				defend.setOnAction((event) -> {
 						controller.defend(pieceRow, pieceCol);
 					});
+				defend.setDisable(controller.hasAttackedOrDefended(row, col));
 				MenuItem move = new MenuItem("Move");
 				move.setOnAction((event) -> {
 						showMoves(pieceRow, pieceCol);
 					});
+				move.setDisable(controller.getMoveDistanceRemaining(row, col) == 0);
 				MenuItem rest = new MenuItem("Rest");
 				rest.setOnAction((event) -> {
 						controller.rest(pieceRow, pieceCol);
 					});
+				rest.setDisable(controller.hasAttackedOrDefended(row, col));
 				onClickMenu.getItems().addAll(attack, defend, move, rest);
 				
 				EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
@@ -246,7 +250,7 @@ public class StrategyGameLevelView implements Observer {
 		    sprite.setFitHeight(tileHeight * 5/6);
 		    sprite.setPreserveRatio(true);
 		    if (controller.getMoveDistanceRemaining(row, col) <= 0) {
-		    	sprite.setOpacity(0.5);
+		    	sprite.setOpacity(0.7);
 		    }
 			tile.add(sprite, 0, 0);
 			GridPane.setHalignment(sprite, HPos.CENTER);

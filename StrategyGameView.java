@@ -76,7 +76,7 @@ public class StrategyGameView extends Application {
 		
 		primaryStage.setOnCloseRequest(event -> {
 			if (curGame != null && !curGame.controller.isOver() && !curGame.isSaveUpToDate()) {
-				attemptSave();
+				attemptSave(curGame.levelFileName);
 			}
 		});
 		
@@ -266,7 +266,7 @@ public class StrategyGameView extends Application {
 		for (String saveName : saveNames) {
 			HBox saveBox = new HBox();
 			
-			Button save = new Button(saveName);
+			Button save = new Button(saveName.replaceAll("(_level_[0-9])", ""));
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
 			save.setOnAction((event) -> {
@@ -522,7 +522,7 @@ public class StrategyGameView extends Application {
 		MenuItem restart = new MenuItem("Restart");
 		restart.setOnAction((event) -> {
 			if (!curGame.isSaveUpToDate()) {
-				attemptSave();
+				attemptSave(levelFileName);
 			}
 			startGame(levelFileName);
 			});
@@ -530,19 +530,19 @@ public class StrategyGameView extends Application {
 		MenuItem backToMenu = new MenuItem("Main Menu");
 		backToMenu.setOnAction((event) -> {
 		if (!curGame.isSaveUpToDate()) {
-			attemptSave();
+			attemptSave(levelFileName);
 		}
 			stage.setScene(mainMenu);
 			});
 		fileMenu.getItems().add(backToMenu);
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction((event) -> {
-			save();
+			save(levelFileName);
 			});
 		fileMenu.getItems().add(save);
 		MenuItem saveAndExit = new MenuItem("Save and Exit");
 		saveAndExit.setOnAction((event) -> {
-			save();
+			save(levelFileName);
 			stage.setScene(mainMenu);
 			});
 		fileMenu.getItems().add(saveAndExit);
@@ -581,7 +581,7 @@ public class StrategyGameView extends Application {
 	 * This function opens a pop-up window that allows the user to type a name for a save
 	 * and save their game.
 	 */
-	private void save() {
+	private void save(String currentLevelName) {
 		TextInputDialog saveGame = new TextInputDialog();
 		saveGame.setTitle("Saving game...");
 		saveGame.setHeaderText( "Enter a name for your save to save your progress.\n" +
@@ -590,7 +590,13 @@ public class StrategyGameView extends Application {
 		
 		Optional<String> fileName = saveGame.showAndWait();
 		
-		fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file + ".dat"));
+		if (currentLevelName.matches(".*(level_[0-9].dat)$")) {
+			fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file.replaceAll(" ", "_") + "_" +
+					currentLevelName.substring(currentLevelName.length()-11)));
+		} else {
+			fileName.ifPresent(file -> curGame.controller.saveGame("saves/" + file.replaceAll(" ", "_") + ".dat"));
+		}
+		
 		curGame.setSaveUpToDate();
 	}
 	
@@ -598,7 +604,7 @@ public class StrategyGameView extends Application {
 	 * This function shows a pop-up window warning the user they are about to exit without saving
 	 * and offers them the option to save.
 	 */
-	private void attemptSave() {
+	private void attemptSave(String currentLevelName) {
 		Dialog<String> saveGameWarning = new Dialog<String>();
 		saveGameWarning.setTitle("Save game?");
 		saveGameWarning.setHeaderText("Are you sure you want to exit without saving?");
@@ -611,7 +617,7 @@ public class StrategyGameView extends Application {
 		Button saveButton = (Button) saveGameWarning.getDialogPane().lookupButton(saveButtonType);
         
         saveButton.setOnAction((event) -> {
-        	save();
+        	save(currentLevelName);
         });
         
 		saveGameWarning.showAndWait();
@@ -750,11 +756,11 @@ public class StrategyGameView extends Application {
 	 */
 	
 	private String getAndUnlockNextLevel(String currentLevelName) {
-		int nextLevelNum = Integer.parseInt(currentLevelName.substring(-5)) + 1;
+		int nextLevelNum = Integer.parseInt(currentLevelName.substring(currentLevelName.length()-5, currentLevelName.length()-4)) + 1;
 		if (nextLevelNum > numLevels) {
 			return "";
 		}
-		return "levels/level_" + Integer.toString(nextLevelNum) + " .dat";
+		return "levels/level_" + Integer.toString(nextLevelNum) + ".dat";
 	}
 	
 	/**
@@ -763,7 +769,7 @@ public class StrategyGameView extends Application {
 	 * @param completedLevelName (String) : the name of the level that was just completed.
 	 */
 	private void unlockNextLevel(String completedLevelName) {
-		int levelNum = Integer.parseInt(completedLevelName.substring(-5));
+		int levelNum = Integer.parseInt(completedLevelName.substring(completedLevelName.length()-5, completedLevelName.length()-4));
 		File unlockedLevels = new File("profile/unlockedLevels.info");
 		try {
 			if (!unlockedLevels.exists()) {
@@ -775,9 +781,15 @@ public class StrategyGameView extends Application {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			} else {
+			} else if (getUnlockedLevels().size() == 1) {
 				FileWriter levelWriter = new FileWriter("profile/completedLevels.info");
-				levelWriter.write("," + Integer.toString(levelNum));
+				levelWriter.write(Integer.toString(levelNum));
+				levelWriter.close();
+			} else if (getUnlockedLevels().size() == levelNum) {
+				FileWriter levelWriter = new FileWriter("profile/completedLevels.info");
+				levelWriter.write("1");
+				for (int i = 2; i <= levelNum; i ++)
+					levelWriter.write("," + Integer.toString(i));
 				levelWriter.close();
 			}
 		} catch (IOException e) {
