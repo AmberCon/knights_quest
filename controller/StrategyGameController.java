@@ -395,7 +395,8 @@ public class StrategyGameController{
 			return possible;
 		}
 		
-		getValidMovesHelper(row, col, p, possible);
+		int remaining = p.getMoveDistanceRemaining();
+		getValidMovesHelper(row, col, remaining, p, possible);
 		
 		return possible;
 	}
@@ -410,11 +411,11 @@ public class StrategyGameController{
 	 * @param remaining How many tiles the piece is able to move
 	 * @param possible A list of all the coordinates the piece can move to
 	 */
-	private void getValidMovesHelper(int row, int col, Piece p, List<int[]> possible) {
+	private void getValidMovesHelper(int row, int col, int remaining, Piece p, List<int[]> possible) {
 		int width = getBoardWidth();
 		int length = getBoardLength();
-		int remaining = p.getMoveDistanceRemaining();
 		if(remaining > 0) {
+			remaining -= 1;
 		/* move up
 		 * if(can move up):
 		 * possible.add([row - 1, col])
@@ -426,7 +427,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row - 1, col, p, possible);
+					getValidMovesHelper(row - 1, col, remaining, p, possible);
 				}
 			}
 		
@@ -441,7 +442,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row - 1, col + 1, p, possible);
+					getValidMovesHelper(row - 1, col + 1, remaining, p, possible);
 				}
 			}
 			
@@ -456,7 +457,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row, col + 1, p, possible);
+					getValidMovesHelper(row, col + 1, remaining, p, possible);
 				}
 			}
 			
@@ -471,7 +472,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row + 1, col + 1, p, possible);
+					getValidMovesHelper(row + 1, col + 1, remaining, p, possible);
 				}
 			}	
 		
@@ -486,7 +487,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row + 1, col, p, possible);
+					getValidMovesHelper(row + 1, col, remaining, p, possible);
 				}
 			}
 			
@@ -502,7 +503,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row + 1, col - 1, p, possible);
+					getValidMovesHelper(row + 1, col - 1, remaining, p, possible);
 				}
 			}
 			
@@ -518,7 +519,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row, col - 1, p, possible);
+					getValidMovesHelper(row, col - 1, remaining, p, possible);
 				}
 			}
 			
@@ -534,7 +535,7 @@ public class StrategyGameController{
 					if(!isInList(possible, coordinate)) {
 						possible.add(coordinate);
 					}
-					getValidMovesHelper(row - 1, col - 1, p, possible);
+					getValidMovesHelper(row - 1, col - 1, remaining, p, possible);
 				}
 			}
 			

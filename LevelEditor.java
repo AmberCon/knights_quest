@@ -239,7 +239,7 @@ public class LevelEditor {
 					}
 					model.getTile(row, col).setPiece(newPiece);
 				}
-			} catch (InstantiationException | IllegalAccessException | InvalidMoveException | IllegalArgumentException | InvocationTargetException | InvalidRemovalException e) {
+			} catch (InstantiationException | IllegalAccessException | InvalidMoveException | IllegalArgumentException | InvocationTargetException e) {
 				Alert a = new Alert(AlertType.ERROR);
 				a.setContentText("Fatal Error; Returning to main menu");
 				a.showAndWait();

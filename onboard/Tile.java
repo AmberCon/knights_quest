@@ -47,19 +47,11 @@ public abstract class Tile implements Serializable{
 	}
 	
 	/**
-	 * A short way to determine if removing a piece is legal.
-	 * Set the piece to null if the tile is an OpenTile. If it is
-	 * any other kind of tile, there is no Piece there to remove.
+	 * Set the piece to null.
 	 * 
-	 * @throws InvalidRemovalException
 	 */
-	public void removePiece() throws InvalidRemovalException {
-		if(isOpenTile()) {
-			this.piece = null;
-		} else {
-			throw new InvalidRemovalException("Can't remove the piece from a Blocked tile!");
-		}
-		
+	public void removePiece() {
+		this.piece = null;
 	}
 	
 	/**
