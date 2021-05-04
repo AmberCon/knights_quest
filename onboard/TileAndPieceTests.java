@@ -216,18 +216,18 @@ public class TileAndPieceTests{
 		
 		Piece humanArcher = testGrid[2][1].getPiece();
 		humanArcher.move(1);
-		assertEquals(humanArcher.getMoveDistanceRemaining(), 2);
+		assertEquals(humanArcher.getMoveDistanceRemaining(), 1);
 		
 		assertThrows(OutOfMovesException.class, ()->{humanKnight2.move(3);});
 		
-		humanArcher.move(2);
+		humanArcher.move(1);
 		assertEquals(humanArcher.getMoveDistanceRemaining(), 0);
 		
 		humanKnight2.resetTurn();
 		assertEquals(humanKnight2.getMoveDistanceRemaining(), 1);
 		
 		humanArcher.resetTurn();
-		assertEquals(humanArcher.getMoveDistanceRemaining(), 3);
+		assertEquals(humanArcher.getMoveDistanceRemaining(), 2);
 		
 		
 		
