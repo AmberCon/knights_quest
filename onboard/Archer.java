@@ -52,7 +52,7 @@ public class Archer extends Piece{
 	 * flags back to false.
 	 */
 	public void resetTurn() {
-		moveDistanceRemaining = 3;
+		moveDistanceRemaining = 2;
 		isDefended = false;
 		hasAttackedOrDefended = false;
 		if (isRested) {
