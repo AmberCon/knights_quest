@@ -315,6 +315,7 @@ public class StrategyGameController{
 
 	public void computerTurn() {
 		computer_player.makeMove();
+		nextTurn();
 	}
 	
 	
