@@ -49,8 +49,12 @@ public abstract class Tile implements Serializable{
 	/**
 	 * Set the piece to null.
 	 * 
+	 * @throws InvalidRemovalException 
 	 */
-	public void removePiece() {
+	public void removePiece() throws InvalidRemovalException {
+		if(!(this.piece instanceof Flyer || this instanceof OpenTile)) {
+			throw new InvalidRemovalException("Can't remove piece from this tile");
+		}
 		this.piece = null;
 	}
 	
@@ -60,7 +64,6 @@ public abstract class Tile implements Serializable{
 	
 	public void setComputerPiece(Piece newPiece) {
 		this.piece = newPiece;
-	
 	}
 	
 	/**
