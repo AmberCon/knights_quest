@@ -415,6 +415,7 @@ public class StrategyGameController{
 	 * @param row The y axis coordinate of the piece
 	 * @param col The x axis coordinate of the piece
 	 * @param remaining How many tiles the piece is able to move
+	 * @param p The piece that is being moved
 	 * @param possible A list of all the coordinates the piece can move to
 	 */
 	private void getValidMovesHelper(int row, int col, int remaining, Piece p, List<int[]> possible) {
