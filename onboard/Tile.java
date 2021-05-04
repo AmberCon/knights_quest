@@ -54,6 +54,15 @@ public abstract class Tile implements Serializable{
 		this.piece = null;
 	}
 	
+	public void removeComputerPiece() {
+		this.piece = null;
+	}
+	
+	public void setComputerPiece(Piece newPiece) {
+		this.piece = newPiece;
+	
+	}
+	
 	/**
 	 * @return true if the Tile has a player there. false if not.
 	 */
@@ -71,7 +80,7 @@ public abstract class Tile implements Serializable{
 	 * @return - Whether p can move into the tile, as a boolean
 	 */
 	public boolean canMoveInto(Piece p) {
-		return piece==null;
+		return piece==null; 
 	}
 	
 	/**

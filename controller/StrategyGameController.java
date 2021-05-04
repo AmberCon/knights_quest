@@ -34,7 +34,7 @@ public class StrategyGameController{
 	 */
 	public StrategyGameController(StrategyGameModel model) {
 		this.model = model;
-		computer_player = new ComputerPlayer(this, model);
+		computer_player = new ComputerPlayer(model);
 	}
 	
 	/**
