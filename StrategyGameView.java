@@ -265,7 +265,6 @@ public class StrategyGameView extends Application {
 		List<String> saveNames = getSaves();
 		for (String saveName : saveNames) {
 			HBox saveBox = new HBox();
-			
 			Button save = new Button(saveName.replaceAll("(_level_[0-9])", ""));
 			save.setPrefHeight(75);
 			save.setStyle("-fx-font-size:20");
